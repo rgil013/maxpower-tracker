@@ -1,8 +1,8 @@
 {
-  "name": "MaxPower Blueprint v2",
-  "short_name": "MaxPower",
+  "name": "Robert's Physique Transformation",
+  "short_name": "Physique",
   "description": "Physique transformation tracker — training, nutrition, and daily tasks",
-  "start_url": "./MaxPower_Tracker_v2.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#F5F5F5",
   "theme_color": "#E8450E",
