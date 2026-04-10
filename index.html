@@ -947,8 +947,6 @@ function checkPin() {
   else{document.getElementById('pinError').textContent='Wrong PIN';[1,2,3,4].forEach(i=>{document.getElementById('pin'+i).value='';});document.getElementById('pin1').focus();setTimeout(()=>{document.getElementById('pinError').textContent='';},2000);}
 }
 function unlock(){document.getElementById('lockScreen').style.display='none';document.getElementById('app').style.display='block';document.getElementById('bottomNav').style.display='flex';sessionStorage.setItem('mp_unlock','1');}
-// One-time PIN reset
-localStorage.setItem(PIN_K,'1485414');
 (function(){if(sessionStorage.getItem('mp_unlock')==='1'){unlock();}else{document.getElementById('lockScreen').style.display='flex';document.getElementById('app').style.display='none';}})();
 
 // ═══════ DAILY CHECKLIST ═══════
