@@ -1047,8 +1047,9 @@ async function sendChat(){
   addMsg(msg,'msg-user');inp.value='';document.getElementById('chatSuggestions').style.display='none';
   const typing=addMsg('Thinking...','msg-ai msg-typing');hist.push({role:'user',content:msg});
   try{const res=await fetch(`${SB_URL}/functions/v1/ai-coach`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${SB_KEY}`,'x-api-key':key},body:JSON.stringify({message:msg,history:hist.slice(-10)})});
-  typing.remove();if(res.ok){const data=await res.json();const reply=data.reply||data.error||'No response';addMsg(reply,'msg-ai');hist.push({role:'assistant',content:reply});}
-  else{addMsg('Error. Check your API key.','msg-ai');}}catch(e){typing.remove();addMsg('Could not reach server.','msg-ai');}
+  typing.remove();const data=await res.json().catch(()=>null);
+  if(data&&data.reply){addMsg(data.reply,'msg-ai');hist.push({role:'assistant',content:data.reply});}
+  else{addMsg(data?.error||'Something went wrong. Try again.','msg-ai');}}catch(e){typing.remove();addMsg('Could not reach server. Check your connection.','msg-ai');}
 }
 function addMsg(t,cls){const m=document.getElementById('chatMessages'),d=document.createElement('div');d.className='msg '+cls;d.textContent=t;m.appendChild(d);m.scrollTop=m.scrollHeight;return d;}
 
