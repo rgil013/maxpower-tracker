@@ -1034,14 +1034,35 @@ async function loadTodaysLog(){
 }
 
 // ═══════ AI COACH ═══════
-const AK='mp_ai_key';let hist=[];
-function getAIKey(){return localStorage.getItem(AK);}
-function saveAIKey(){const k=document.getElementById('aiKeyInput').value.trim();if(k){localStorage.setItem(AK,k);document.getElementById('aiKeySetup').style.display='none';document.getElementById('chatContainer').style.display='flex';}}
-function initCoach(){if(!getAIKey()){document.getElementById('chatContainer').style.display='none';document.getElementById('aiKeySetup').style.display='block';}}
+let hist=[];let cachedAIKey=null;
+
+async function getAIKey(){
+  if(cachedAIKey)return cachedAIKey;
+  // Try Supabase first (synced across devices)
+  try{const r=await sb(`app_settings?key=eq.groq_api_key&select=value`);if(r&&r.length&&r[0].value){cachedAIKey=r[0].value;return cachedAIKey;}}catch(e){}
+  return null;
+}
+
+async function saveAIKey(){
+  const k=document.getElementById('aiKeyInput').value.trim();if(!k)return;
+  const btn=document.querySelector('#aiKeySetup .btn');btn.textContent='Saving...';btn.disabled=true;
+  try{await sb('app_settings',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({key:'groq_api_key',value:k,updated_at:new Date().toISOString()})});
+  cachedAIKey=k;document.getElementById('aiKeySetup').style.display='none';document.getElementById('chatContainer').style.display='flex';
+  }catch(e){btn.textContent='Save failed — try again';btn.disabled=false;}
+}
+
+async function initCoach(){
+  const k=await getAIKey();
+  if(!k){document.getElementById('chatContainer').style.display='none';document.getElementById('aiKeySetup').style.display='block';}
+  else{document.getElementById('chatContainer').style.display='flex';document.getElementById('aiKeySetup').style.display='none';}
+}
+
+// Clear old localStorage key
+localStorage.removeItem('mp_ai_key');
 function sendSuggestion(b){document.getElementById('chatInput').value=b.textContent;sendChat();}
 async function sendChat(){
   const inp=document.getElementById('chatInput'),msg=inp.value.trim();if(!msg)return;
-  const key=getAIKey();if(!key){initCoach();return;}
+  const key=await getAIKey();if(!key){initCoach();return;}
   addMsg(msg,'msg-user');inp.value='';document.getElementById('chatSuggestions').style.display='none';
   const typing=addMsg('Thinking...','msg-ai msg-typing');hist.push({role:'user',content:msg});
   try{const res=await fetch(`${SB_URL}/functions/v1/ai-coach`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${SB_KEY}`,'x-api-key':key},body:JSON.stringify({message:msg,history:hist.slice(-10)})});
