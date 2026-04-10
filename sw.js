@@ -1,6 +1,7 @@
-const CACHE_NAME = 'maxpower-v2';
+const CACHE_NAME = 'maxpower-v3';
 const ASSETS = [
-  './MaxPower_Tracker_v2.html',
+  './',
+  './index.html',
   './icon-192.png',
   './icon-512.png',
   './manifest.json'

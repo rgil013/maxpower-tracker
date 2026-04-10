@@ -615,6 +615,183 @@ tr:last-child td { border-bottom: none; }
   .header { padding-top: calc(8px + env(safe-area-inset-top, 0px)); }
   html, body { overscroll-behavior: none; }
 }
+/* ══════ KPI DASHBOARD ══════ */
+.kpi-hero {
+  background: linear-gradient(135deg, var(--accent) 0%, #FF8A65 100%);
+  border-radius: var(--r);
+  padding: 24px 20px;
+  color: white;
+  text-align: center;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.kpi-hero::after {
+  content: '';
+  position: absolute;
+  top: -30%; right: -20%;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+.kpi-hero-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
+.kpi-hero-value { font-size: 48px; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1.1; margin: 4px 0; }
+.kpi-hero-sub { font-size: 13px; opacity: 0.8; }
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.kpi-card {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 16px 14px;
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card-icon { font-size: 20px; margin-bottom: 6px; }
+.kpi-card-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; }
+.kpi-card-value { font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin: 2px 0; }
+.kpi-card-delta { font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 20px; }
+.kpi-card-delta.up { background: var(--green-bg); color: #065F46; }
+.kpi-card-delta.down { background: var(--red-bg); color: #991B1B; }
+.kpi-card-delta.neutral { background: var(--blue-bg); color: #1E40AF; }
+.kpi-card .bar-track { height: 4px; background: var(--line); border-radius: 2px; margin-top: 8px; }
+.kpi-card .bar-fill { height: 4px; border-radius: 2px; transition: width 0.6s ease; }
+
+.kpi-wide {
+  grid-column: 1 / -1;
+}
+
+.spark-row {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 32px;
+  margin-top: 8px;
+}
+.spark-bar {
+  flex: 1;
+  border-radius: 2px;
+  min-height: 3px;
+  transition: height 0.3s ease;
+}
+
+.kpi-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 20px 0 10px;
+}
+
+.macro-ring-row {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+}
+.macro-ring {
+  text-align: center;
+}
+.macro-ring-circle {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 6px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.macro-ring-inner {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.macro-ring-label { font-size: 11px; font-weight: 600; color: var(--text3); }
+.macro-ring-sub { font-size: 10px; color: var(--text3); }
+
+/* ══════ COMPLIANCE GRID ══════ */
+.comp-week-header {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr) 60px;
+  gap: 4px;
+  margin-bottom: 4px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+.comp-week-row {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr) 60px;
+  gap: 4px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  align-items: center;
+}
+.comp-week-row:last-child { border-bottom: none; }
+.comp-cat-label { font-weight: 600; font-size: 12px; color: var(--text2); }
+.comp-cell {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s;
+  margin: 0 auto;
+}
+.comp-cell.empty { background: var(--line); }
+.comp-cell.yes { background: var(--green); color: white; font-weight: 700; }
+.comp-cell.no { background: var(--red-bg); color: var(--red); font-weight: 700; }
+.comp-cell.partial { background: var(--yellow-bg); color: var(--yellow); font-weight: 700; }
+.comp-score { font-weight: 700; font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 13px; }
+
+.comp-summary-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.comp-summary-card {
+  flex: 1;
+  background: var(--card);
+  border-radius: var(--r-sm);
+  padding: 14px 10px;
+  text-align: center;
+}
+.comp-summary-value { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+.comp-summary-label { font-size: 10px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.comp-heatmap {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  padding: 12px;
+}
+.heat-cell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  min-height: 20px;
+}
+.heat-0 { background: var(--line); }
+.heat-1 { background: #FEE2E2; }
+.heat-2 { background: #FDE68A; }
+.heat-3 { background: #86EFAC; }
+.heat-4 { background: var(--green); }
+
 </style>
 </head>
 <body>
@@ -646,7 +823,8 @@ tr:last-child td { border-bottom: none; }
 
 <!-- ══════ DESKTOP NAV ══════ -->
 <div class="desktop-nav" id="desktopNav">
-  <button class="active" onclick="go('daily')">Daily</button>
+  <button class="active" onclick="go('home')">Home</button>
+  <button onclick="go('daily')">Checklist</button>
   <button onclick="go('logger')">Log Workout</button>
   <button onclick="go('coach')">AI Coach</button>
   <button onclick="go('progress')">Progress</button>
@@ -662,8 +840,194 @@ tr:last-child td { border-bottom: none; }
 
 <div class="content">
 
+<!-- ═══════ HOME KPI DASHBOARD ═══════ -->
+<div id="home" class="tab active">
+  <!-- Hero: Today's Score -->
+  <div class="kpi-hero">
+    <div class="kpi-hero-label">Today's Score</div>
+    <div class="kpi-hero-value" id="kpiTodayScore">0%</div>
+    <div class="kpi-hero-sub" id="kpiTodaySub">Check off tasks to track your day</div>
+    <div style="display:flex;justify-content:center;gap:16px;margin-top:12px;">
+      <div style="text-align:center;"><div style="font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="kpiHeroDone">0</div><div style="font-size:10px;opacity:0.7;">Done</div></div>
+      <div style="width:1px;background:rgba(255,255,255,0.2);"></div>
+      <div style="text-align:center;"><div style="font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="kpiHeroRemaining">22</div><div style="font-size:10px;opacity:0.7;">Remaining</div></div>
+      <div style="width:1px;background:rgba(255,255,255,0.2);"></div>
+      <div style="text-align:center;"><div style="font-size:20px;font-weight:800;font-family:'JetBrains Mono',monospace;" id="kpiHeroStreak">0</div><div style="font-size:10px;opacity:0.7;">Day Streak</div></div>
+    </div>
+  </div>
+
+  <!-- Primary Metrics: 2x2 grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-card-icon">&#9878;</div>
+      <div class="kpi-card-label">Current Weight</div>
+      <div class="kpi-card-value" id="kpiWeight">190</div>
+      <div class="kpi-card-delta neutral" id="kpiWeightDelta">Starting</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-icon">&#127919;</div>
+      <div class="kpi-card-label">Goal Progress</div>
+      <div class="kpi-card-value" id="kpiGoalPct">0%</div>
+      <div class="bar-track"><div class="bar-fill" id="kpiGoalBar" style="width:0%;background:var(--accent);"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px;" id="kpiGoalSub">190 &rarr; 175 lbs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-icon">&#128170;</div>
+      <div class="kpi-card-label">Sessions This Week</div>
+      <div class="kpi-card-value" id="kpiSessions">0<span style="font-size:14px;color:var(--text3);">/5</span></div>
+      <div class="bar-track"><div class="bar-fill" id="kpiSessionBar" style="width:0%;background:var(--green);"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-icon">&#128293;</div>
+      <div class="kpi-card-label">Day Streak</div>
+      <div class="kpi-card-value" id="kpiStreak">0</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px;">Consecutive 80%+ days</div>
+    </div>
+  </div>
+
+  <!-- 30-Day Activity Heatmap -->
+  <div class="kpi-section-title">30-Day Activity</div>
+  <div class="card">
+    <div class="card-body" style="padding:14px 12px;">
+      <div id="kpiActivityHeatmap" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;"></div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:6px;padding:0 2px;">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:8px;">
+        <span style="font-size:9px;color:var(--text3);">Less</span>
+        <div style="width:10px;height:10px;border-radius:2px;background:var(--line);"></div>
+        <div style="width:10px;height:10px;border-radius:2px;background:#D1FAE5;"></div>
+        <div style="width:10px;height:10px;border-radius:2px;background:#6EE7B7;"></div>
+        <div style="width:10px;height:10px;border-radius:2px;background:#10B981;"></div>
+        <div style="width:10px;height:10px;border-radius:2px;background:#047857;"></div>
+        <span style="font-size:9px;color:var(--text3);">More</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Macro Adherence -->
+  <div class="kpi-section-title">Macro Adherence — This Week</div>
+  <div class="card">
+    <div class="card-body">
+      <div class="macro-ring-row" id="kpiMacroRings">
+        <div class="macro-ring">
+          <div class="macro-ring-circle" id="ringCal" style="background:conic-gradient(var(--accent) 0% 0%, var(--line) 0% 100%);">
+            <div class="macro-ring-inner" id="ringCalVal">—</div>
+          </div>
+          <div class="macro-ring-label">Calories</div>
+          <div class="macro-ring-sub">2,350 target</div>
+        </div>
+        <div class="macro-ring">
+          <div class="macro-ring-circle" id="ringPro" style="background:conic-gradient(var(--green) 0% 0%, var(--line) 0% 100%);">
+            <div class="macro-ring-inner" id="ringProVal">—</div>
+          </div>
+          <div class="macro-ring-label">Protein</div>
+          <div class="macro-ring-sub">228g target</div>
+        </div>
+        <div class="macro-ring">
+          <div class="macro-ring-circle" id="ringCarb" style="background:conic-gradient(var(--yellow) 0% 0%, var(--line) 0% 100%);">
+            <div class="macro-ring-inner" id="ringCarbVal">—</div>
+          </div>
+          <div class="macro-ring-label">Carbs</div>
+          <div class="macro-ring-sub">216g target</div>
+        </div>
+        <div class="macro-ring">
+          <div class="macro-ring-circle" id="ringFat" style="background:conic-gradient(#9B59B6 0% 0%, var(--line) 0% 100%);">
+            <div class="macro-ring-inner" id="ringFatVal">—</div>
+          </div>
+          <div class="macro-ring-label">Fat</div>
+          <div class="macro-ring-sub">64g target</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px;">Daily Calorie Trend</div>
+      <div class="spark-row" id="kpiCalSpark"></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px;">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+      <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--text3);" id="kpiCalAvgLabel"></div>
+    </div>
+  </div>
+
+  <!-- Category Compliance Breakdown -->
+  <div class="kpi-section-title">Weekly Compliance</div>
+  <div class="card">
+    <div class="card-body" style="padding:14px 16px;">
+      <div id="kpiCompBars"></div>
+    </div>
+  </div>
+
+  <!-- Supplement & Recovery Snapshot -->
+  <div class="kpi-section-title">Today's Checklist Breakdown</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div style="font-size:18px;margin-bottom:2px;">&#127860;</div>
+      <div class="kpi-card-label">Nutrition</div>
+      <div class="kpi-card-value" style="font-size:22px;" id="kpiCatNutr">—</div>
+    </div>
+    <div class="kpi-card">
+      <div style="font-size:18px;margin-bottom:2px;">&#128170;</div>
+      <div class="kpi-card-label">Training</div>
+      <div class="kpi-card-value" style="font-size:22px;" id="kpiCatTrain">—</div>
+    </div>
+    <div class="kpi-card">
+      <div style="font-size:18px;margin-bottom:2px;">&#128138;</div>
+      <div class="kpi-card-label">Supplements</div>
+      <div class="kpi-card-value" style="font-size:22px;" id="kpiCatSupp">—</div>
+    </div>
+    <div class="kpi-card">
+      <div style="font-size:18px;margin-bottom:2px;">&#128164;</div>
+      <div class="kpi-card-label">Recovery</div>
+      <div class="kpi-card-value" style="font-size:22px;" id="kpiCatRec">—</div>
+    </div>
+  </div>
+
+  <!-- Weekly Summary Stats -->
+  <div class="kpi-section-title">This Week at a Glance</div>
+  <div class="card">
+    <div class="card-body" style="padding:14px 16px;">
+      <div style="display:flex;flex-direction:column;gap:12px;" id="kpiWeeklySummary">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--text2);">Avg Daily Calories</span>
+          <span style="font-size:15px;font-weight:700;font-family:'JetBrains Mono',monospace;" id="kpiAvgCal">—</span>
+        </div>
+        <div style="height:1px;background:var(--line);"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--text2);">Avg Daily Protein</span>
+          <span style="font-size:15px;font-weight:700;font-family:'JetBrains Mono',monospace;" id="kpiAvgPro">—</span>
+        </div>
+        <div style="height:1px;background:var(--line);"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--text2);">Hydration Doses</span>
+          <span style="font-size:15px;font-weight:700;font-family:'JetBrains Mono',monospace;" id="kpiHydration">—</span>
+        </div>
+        <div style="height:1px;background:var(--line);"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--text2);">Sleep Goal Hit Rate</span>
+          <span style="font-size:15px;font-weight:700;font-family:'JetBrains Mono',monospace;" id="kpiSleepRate">—</span>
+        </div>
+        <div style="height:1px;background:var(--line);"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--text2);">Overall Compliance</span>
+          <span style="font-size:15px;font-weight:700;font-family:'JetBrains Mono',monospace;" id="kpiOverallComp">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="kpi-section-title">Quick Actions</div>
+  <div style="display:flex;gap:10px;margin-bottom:8px;">
+    <button class="btn btn-primary" onclick="go('daily')" style="flex:1;padding:14px;font-size:14px;">Start Today's Checklist</button>
+    <button class="btn btn-secondary" onclick="go('logger')" style="flex:1;padding:14px;font-size:14px;">Log Workout</button>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button class="btn btn-secondary" onclick="go('compliance')" style="flex:1;padding:12px;font-size:13px;background:var(--blue-bg);color:var(--blue);">Compliance Grid</button>
+    <button class="btn btn-secondary" onclick="go('progress')" style="flex:1;padding:12px;font-size:13px;background:var(--green-bg);color:var(--green);">View Progress</button>
+  </div>
+</div>
+
 <!-- ═══════ DAILY ═══════ -->
-<div id="daily" class="tab active">
+<div id="daily" class="tab">
   <div class="date-nav">
     <button onclick="changeDay(-1)">&#8249;</button>
     <div class="date-label" id="dateLabel"></div>
@@ -980,7 +1344,76 @@ tr:last-child td { border-bottom: none; }
 
 <div id="progression" class="tab"><div class="section-head">Progression</div><div class="card"><div class="card-head">Compounds</div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>Current</th><th>Next</th></tr><tr><td>Incline DB</td><td class="mono">80 lbs</td><td class="mono">85</td></tr><tr><td>Flat DB</td><td class="mono">80 lbs</td><td class="mono">85</td></tr><tr><td>BB Row</td><td class="mono">155 lbs</td><td class="mono">155 w/ecc</td></tr><tr><td>Hack Squat</td><td class="mono">240 lbs</td><td class="mono">260</td></tr><tr><td>Leg Press</td><td class="mono">370 lbs</td><td class="mono">400</td></tr><tr><td>SLDL</td><td class="mono">185 lbs</td><td class="mono">190</td></tr><tr><td>DB Press 75&deg;</td><td class="mono">40 lbs</td><td class="mono">40x12</td></tr></table></div></div><div class="card"><div class="card-head">Isolations + Techniques</div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>Current</th><th>Technique</th></tr><tr><td>Pec Deck</td><td class="mono">175</td><td><span class="pill pill-accent">Drop set</span></td></tr><tr><td>Leg Ext</td><td class="mono">100-120</td><td><span class="pill pill-accent">Lengthened partial</span></td></tr><tr><td>Cable Lat Raise</td><td class="mono">5</td><td><span class="pill pill-accent">Myo-reps</span></td></tr><tr><td>Incline Curl</td><td class="mono">25</td><td><span class="pill pill-accent">Lengthened partial</span></td></tr><tr><td>Leg Curl</td><td class="mono">90</td><td><span class="pill pill-accent">Drop set</span></td></tr><tr><td>Tri Pushdown</td><td class="mono">TBD</td><td><span class="pill pill-accent">Drop set</span></td></tr></table></div></div></div>
 
-<div id="compliance" class="tab"><div class="section-head">Compliance</div><div class="card"><div class="card-body" style="padding:12px 0;"><div style="padding:0 16px;font-size:13px;color:var(--text3);margin-bottom:8px;">Score YES/NO every Sunday. Target: 85%+</div></div></div></div>
+<div id="compliance" class="tab">
+  <div class="section-head">Compliance Tracker</div>
+
+  <div class="comp-summary-row">
+    <div class="comp-summary-card">
+      <div class="comp-summary-value" id="compOverall" style="color:var(--accent);">—</div>
+      <div class="comp-summary-label">Overall</div>
+    </div>
+    <div class="comp-summary-card">
+      <div class="comp-summary-value" id="compBestStreak" style="color:var(--green);">0</div>
+      <div class="comp-summary-label">Best Streak</div>
+    </div>
+    <div class="comp-summary-card">
+      <div class="comp-summary-value" id="compWeeksLogged" style="color:var(--blue);">0</div>
+      <div class="comp-summary-label">Weeks Logged</div>
+    </div>
+    <div class="comp-summary-card">
+      <div class="comp-summary-value" id="compThisWeek" style="color:var(--accent);">—</div>
+      <div class="comp-summary-label">This Week</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Weekly Compliance Grid <span class="pill pill-accent" style="font-size:10px;">Tap to toggle</span></div>
+    <div class="card-body flush" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+      <div class="comp-week-header">
+        <div></div>
+        <div style="text-align:center;">M</div>
+        <div style="text-align:center;">T</div>
+        <div style="text-align:center;">W</div>
+        <div style="text-align:center;">T</div>
+        <div style="text-align:center;">F</div>
+        <div style="text-align:center;">S</div>
+        <div style="text-align:center;">S</div>
+        <div style="text-align:center;">Avg</div>
+      </div>
+      <div id="compGrid"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <div class="card-head">30-Day Heatmap</div>
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:6px;">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+      <div class="comp-heatmap" id="compHeatmap"></div>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;font-size:10px;color:var(--text3);margin-top:8px;">
+        Less <div class="heat-cell heat-0" style="width:14px;height:14px;display:inline-block;"></div>
+        <div class="heat-cell heat-1" style="width:14px;height:14px;display:inline-block;"></div>
+        <div class="heat-cell heat-2" style="width:14px;height:14px;display:inline-block;"></div>
+        <div class="heat-cell heat-3" style="width:14px;height:14px;display:inline-block;"></div>
+        <div class="heat-cell heat-4" style="width:14px;height:14px;display:inline-block;"></div> More
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <div class="card-head">Category Breakdown</div>
+    <div class="card-body flush">
+      <table>
+        <tr><th>Category</th><th>Items</th><th>This Week</th><th>All-Time</th></tr>
+        <tr id="compCatNutrition"><td>Nutrition</td><td class="center mono" id="compCatNutrItems">5</td><td class="center" id="compCatNutrWeek">—</td><td class="center" id="compCatNutrAll">—</td></tr>
+        <tr id="compCatTraining"><td>Training</td><td class="center mono" id="compCatTrainItems">6</td><td class="center" id="compCatTrainWeek">—</td><td class="center" id="compCatTrainAll">—</td></tr>
+        <tr id="compCatSupplements"><td>Supplements</td><td class="center mono" id="compCatSuppItems">4</td><td class="center" id="compCatSuppWeek">—</td><td class="center" id="compCatSuppAll">—</td></tr>
+        <tr id="compCatRecovery"><td>Recovery</td><td class="center mono" id="compCatRecItems">4</td><td class="center" id="compCatRecWeek">—</td><td class="center" id="compCatRecAll">—</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
 <div id="weight" class="tab"><div class="section-head">Body Stats</div><div class="card"><div class="card-head">Weigh-In Log</div><div class="card-body flush"><table><tr><th>Week</th><th>Avg</th><th>Lost</th></tr><tr style="background:var(--accent-light)"><td><strong>Start</strong></td><td class="mono"><strong>190.0</strong></td><td>—</td></tr><tr><td>Wk 1</td><td class="mono">—</td><td class="mono">—</td></tr><tr><td>Wk 2</td><td class="mono">—</td><td class="mono">—</td></tr><tr><td>Wk 3 <span class="pill pill-blue">NOW</span></td><td class="mono">—</td><td class="mono">—</td></tr></table></div></div><div class="card"><div class="card-head">When Will Abs Show?</div><div class="card-body flush"><table><tr><th>BF%</th><th>Visibility</th><th>Weight</th></tr><tr><td>18-22%</td><td>Not visible</td><td class="mono">190</td></tr><tr><td>15-17%</td><td>Faint upper</td><td class="mono">183-186</td></tr><tr><td>13-14%</td><td>Clear 4-pack</td><td class="mono">178-181</td></tr><tr style="color:var(--accent);font-weight:600"><td>11-12%</td><td>Full 6-pack</td><td class="mono">173-177</td></tr></table></div></div></div>
 <div id="refeed" class="tab"><div class="section-head">Refeeds</div><div class="stats-row"><div class="stat-pill"><div class="val">2,850</div><div class="lbl">Refeed Cal</div></div><div class="stat-pill"><div class="val">293g</div><div class="lbl">Refeed Carbs</div></div></div><div class="card"><div class="card-head">Rules</div><div class="card-body" style="font-size:14px;line-height:1.8;">1. Extra 500 cal ALL from carbs<br>2. Protein + fat unchanged<br>3. Place on hardest day (Legs)<br>4. Sources: rice, potatoes, oats, fruit<br>5. NOT: fast food binges</div></div><div class="card"><div class="card-head">Diet Breaks</div><div class="card-body flush"><table><tr><th>When</th><th>Duration</th><th>Calories</th></tr><tr><td>Wk 7-8</td><td>10-14 days</td><td class="mono">2,850</td></tr><tr><td>Wk 14</td><td>7 days</td><td class="mono">2,850</td></tr></table></div></div></div>
 <div id="reference" class="tab"><div class="section-head">Quick Reference</div><div class="card"><div class="card-head">Macros</div><div class="card-body flush"><table><tr><th>Macro</th><th>Cut</th><th>Refeed</th></tr><tr><td>Calories</td><td class="mono">2,350</td><td class="mono">2,850</td></tr><tr><td>Protein</td><td class="mono">228g</td><td class="mono">228g</td></tr><tr><td>Carbs</td><td class="mono">168g</td><td class="mono">293g</td></tr><tr><td>Fat</td><td class="mono">85g</td><td class="mono">85g</td></tr></table></div></div><div class="card"><div class="card-head">RPE Guide</div><div class="card-body flush"><table><tr><th>RPE</th><th>Meaning</th><th>When</th></tr><tr><td class="mono">7</td><td>3 left</td><td>Early sets</td></tr><tr style="color:var(--accent);font-weight:600"><td class="mono">8</td><td>2 left</td><td>DEFAULT</td></tr><tr><td class="mono">9</td><td>1 left</td><td>Last iso set</td></tr><tr><td class="mono">10</td><td>Failure</td><td>Never compounds</td></tr></table></div></div><div class="card"><div class="card-head">Techniques</div><div class="card-body flush"><table><tr><th>Name</th><th>How</th></tr><tr><td><span class="pill pill-accent">Drop set</span></td><td style="font-size:12px">Fail &rarr; strip 30-40% &rarr; rep to RPE 9</td></tr><tr><td><span class="pill pill-accent">Myo-reps</span></td><td style="font-size:12px">RPE 9 &rarr; 15s rest &rarr; 3-5 rep minis</td></tr><tr><td><span class="pill pill-accent">Lengthened partial</span></td><td style="font-size:12px">After fail, 6-10 in bottom 1/3</td></tr></table></div></div><div class="card"><div class="card-head">Supplements</div><div class="card-body flush"><table><tr><th>Supp</th><th>Dose</th><th>When</th></tr><tr><td>Creatine</td><td class="mono">5g</td><td>AM</td></tr><tr><td>Multi</td><td class="mono">3 caps</td><td>AM</td></tr><tr><td>Fish Oil</td><td class="mono">2 softgels</td><td>AM</td></tr><tr><td>Clomid</td><td class="mono">50mg</td><td>AM</td></tr><tr><td>Boron</td><td class="mono">6-10mg</td><td>AM</td></tr><tr><td>Magnesium</td><td class="mono">400mg</td><td>Bed</td></tr><tr><td>Liquid IV</td><td class="mono">2-3/day</td><td>All day</td></tr></table></div></div><div class="card"><div class="card-head">Action Items <span class="pill pill-green">ALL DONE</span></div><div class="card-body" style="font-size:13px; color:var(--text2);">GI Doctor, DIM flag, D3 verify, Boron buy, Clomid dose — all completed Apr 10.</div></div></div>
@@ -990,10 +1423,10 @@ tr:last-child td { border-bottom: none; }
 
 <!-- ══════ BOTTOM NAV ══════ -->
 <nav class="bottom-nav" id="bottomNav" style="display:none;">
-  <button class="nav-item active" onclick="go('daily')"><div class="nav-icon">&#10003;</div>Daily</button>
+  <button class="nav-item active" onclick="go('home')"><div class="nav-icon">&#127968;</div>Home</button>
+  <button class="nav-item" onclick="go('daily')"><div class="nav-icon">&#10003;</div>Daily</button>
   <button class="nav-item" onclick="go('logger')"><div class="nav-icon">&#128170;</div>Log</button>
   <button class="nav-item" onclick="go('coach')"><div class="nav-icon">&#128172;</div>Coach</button>
-  <button class="nav-item" onclick="go('progress')"><div class="nav-icon">&#128200;</div>Progress</button>
   <button class="nav-item" onclick="go('more')"><div class="nav-icon">&#8943;</div>More</button>
 </nav>
 
@@ -1016,7 +1449,7 @@ function go(id) {
   document.querySelectorAll('.desktop-nav button').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll(`.nav-item, .desktop-nav button`).forEach(b=>{
     const txt = b.textContent.trim().toLowerCase();
-    const map = {daily:'daily',log:'logger',coach:'coach',progress:'progress',more:'more',dashboard:'dash',nutrition:'nutrition','training log':'training',progression:'progression',compliance:'compliance','body stats':'weight',refeeds:'refeed',reference:'reference','ai coach':'coach','log workout':'logger',stats:'dash'};
+    const map = {home:'home',daily:'daily',checklist:'daily',log:'logger',coach:'coach',progress:'progress',more:'more',dashboard:'dash',nutrition:'nutrition','training log':'training',progression:'progression',compliance:'compliance','body stats':'weight',refeeds:'refeed',reference:'reference','ai coach':'coach','log workout':'logger',stats:'dash'};
     if(map[txt]===id) b.classList.add('active');
   });
   if(id==='logger') loadTodaysLog();
@@ -1360,6 +1793,444 @@ go = function(id) {
   origGo(id);
   if (id === 'progress') setTimeout(initCharts, 100);
 };
+
+
+// ═══════ ITEM CATEGORIES ═══════
+const CATS = {
+  nutrition: ['eat-before-adderall','adderall-window-meal','preworkout-meal','post-workout-meal','protein-target','calorie-target','meals-spread','no-junk'],
+  training: ['shoulder-warmup','session-complete','rpe-check','eccentrics','intensity-tech','abs-done','cardio-done'],
+  supplements: ['am-supplements','liquid-iv-1','liquid-iv-2','liquid-iv-3'],
+  recovery: ['magnesium','hydration','sleep-time']
+};
+
+function getCatScore(items, cat) {
+  const ids = CATS[cat];
+  if (!ids || !ids.length) return 0;
+  let done = 0;
+  ids.forEach(id => { if (items[id]) done++; });
+  return Math.round(done / ids.length * 100);
+}
+
+// ═══════ KPI DASHBOARD ═══════
+function updateKPIDashboard() {
+  const today = new Date();
+  const todayItems = getLocal(today);
+  const totalItems = document.querySelectorAll('#daily .item').length || 22;
+  const doneItems = Object.keys(todayItems).length;
+  const todayPct = totalItems ? Math.round(doneItems / totalItems * 100) : 0;
+
+  function avg(arr) { return arr.length ? Math.round(arr.reduce((a,b) => a+b, 0) / arr.length) : 0; }
+
+  // Hero section
+  const heroEl = document.getElementById('kpiTodayScore');
+  const heroSub = document.getElementById('kpiTodaySub');
+  if (heroEl) {
+    heroEl.textContent = todayPct + '%';
+    if (todayPct >= 80) heroSub.textContent = 'Crushing it today.';
+    else if (todayPct >= 50) heroSub.textContent = 'Solid progress \u2014 keep pushing.';
+    else if (todayPct > 0) heroSub.textContent = doneItems + ' of ' + totalItems + ' tasks done today';
+    else heroSub.textContent = 'Start your checklist to track today';
+  }
+  const heroDone = document.getElementById('kpiHeroDone');
+  const heroRemaining = document.getElementById('kpiHeroRemaining');
+  if (heroDone) heroDone.textContent = doneItems;
+  if (heroRemaining) heroRemaining.textContent = totalItems - doneItems;
+
+  // Streak
+  let streak = 0;
+  if (Object.keys(todayItems).length / totalItems >= 0.8) streak++;
+  const sd = new Date(today); sd.setDate(sd.getDate() - 1);
+  for (let i = 0; i < 60; i++) {
+    const it = getLocal(sd);
+    if (Object.keys(it).length / totalItems >= 0.8) { streak++; sd.setDate(sd.getDate() - 1); }
+    else break;
+  }
+  const kpiStreak = document.getElementById('kpiStreak');
+  if (kpiStreak) kpiStreak.textContent = streak;
+  const heroStreak = document.getElementById('kpiHeroStreak');
+  if (heroStreak) heroStreak.textContent = streak;
+
+  // Sessions this week
+  const weekStart = new Date(today);
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
+  if (weekStart > today) weekStart.setDate(weekStart.getDate() - 7);
+  let sessions = 0, hydrationDoses = 0, sleepHits = 0, daysWithData = 0;
+  let weekNutr = [], weekTrain = [], weekSupp = [], weekRec = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    if (d > today) break;
+    const dayItems = getLocal(d);
+    if (dayItems['session-complete']) sessions++;
+    // Hydration: count Liquid IV doses per day
+    let hyd = 0;
+    if (dayItems['liquid-iv-1']) hyd++;
+    if (dayItems['liquid-iv-2']) hyd++;
+    if (dayItems['liquid-iv-3']) hyd++;
+    hydrationDoses += hyd;
+    // Sleep
+    if (dayItems['sleep-time']) sleepHits++;
+    if (Object.keys(dayItems).length > 0) {
+      daysWithData++;
+      weekNutr.push(getCatScore(dayItems, 'nutrition'));
+      weekTrain.push(getCatScore(dayItems, 'training'));
+      weekSupp.push(getCatScore(dayItems, 'supplements'));
+      weekRec.push(getCatScore(dayItems, 'recovery'));
+    }
+  }
+  const kpiSessions = document.getElementById('kpiSessions');
+  if (kpiSessions) kpiSessions.innerHTML = sessions + '<span style="font-size:14px;color:var(--text3);">/5</span>';
+  const kpiSessionBar = document.getElementById('kpiSessionBar');
+  if (kpiSessionBar) kpiSessionBar.style.width = Math.min(100, sessions / 5 * 100) + '%';
+
+  const nutrAvg = avg(weekNutr), trainAvg = avg(weekTrain), suppAvg = avg(weekSupp), recAvg = avg(weekRec);
+  const overallComp = daysWithData ? Math.round((nutrAvg + trainAvg + suppAvg + recAvg) / 4) : 0;
+
+  // Today's category breakdown cards
+  const todayNutr = getCatScore(todayItems, 'nutrition');
+  const todayTrain = getCatScore(todayItems, 'training');
+  const todaySupp = getCatScore(todayItems, 'supplements');
+  const todayRec = getCatScore(todayItems, 'recovery');
+  [{id:'kpiCatNutr',v:todayNutr},{id:'kpiCatTrain',v:todayTrain},{id:'kpiCatSupp',v:todaySupp},{id:'kpiCatRec',v:todayRec}].forEach(x => {
+    const el = document.getElementById(x.id);
+    if (el) {
+      el.textContent = x.v + '%';
+      el.style.color = x.v >= 70 ? 'var(--green)' : x.v >= 40 ? 'var(--yellow)' : x.v > 0 ? 'var(--red)' : 'var(--text3)';
+    }
+  });
+
+  // Weekly compliance bars (visual)
+  const compBars = document.getElementById('kpiCompBars');
+  if (compBars) {
+    const cats = [
+      {name:'Nutrition',avg:nutrAvg,color:'var(--green)',icon:'\uD83C\uDF5C'},
+      {name:'Training',avg:trainAvg,color:'var(--accent)',icon:'\uD83D\uDCAA'},
+      {name:'Supplements',avg:suppAvg,color:'var(--blue)',icon:'\uD83D\uDC8A'},
+      {name:'Recovery',avg:recAvg,color:'#9B59B6',icon:'\uD83D\uDCA4'}
+    ];
+    compBars.innerHTML = cats.map(c => {
+      const w = Math.max(2, c.avg);
+      return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">' +
+        '<div style="width:80px;font-size:12px;font-weight:600;color:var(--text2);">' + c.icon + ' ' + c.name + '</div>' +
+        '<div style="flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden;">' +
+        '<div style="width:' + w + '%;height:100%;background:' + c.color + ';border-radius:4px;transition:width 0.5s;"></div></div>' +
+        '<div style="width:36px;text-align:right;font-size:13px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:' + (c.avg >= 70 ? 'var(--green)' : c.avg >= 40 ? 'var(--yellow)' : 'var(--text3)') + ';">' + (c.avg ? c.avg + '%' : '\u2014') + '</div></div>';
+    }).join('');
+  }
+
+  // 30-day activity heatmap
+  const heatmap = document.getElementById('kpiActivityHeatmap');
+  if (heatmap) {
+    const cells = [];
+    // Calculate the starting Monday to align the grid
+    const thirtyAgo = new Date(today); thirtyAgo.setDate(thirtyAgo.getDate() - 34);
+    const startMon = new Date(thirtyAgo);
+    startMon.setDate(startMon.getDate() - ((startMon.getDay() + 6) % 7));
+    const endDate = new Date(today);
+    const d = new Date(startMon);
+    while (d <= endDate) {
+      const dayItems = getLocal(d);
+      const done = Object.keys(dayItems).length;
+      const pct = done / totalItems;
+      let lvl = 0;
+      if (pct >= 0.8) lvl = 4;
+      else if (pct >= 0.6) lvl = 3;
+      else if (pct >= 0.3) lvl = 2;
+      else if (pct > 0) lvl = 1;
+      const colors = ['var(--line)','#D1FAE5','#6EE7B7','#10B981','#047857'];
+      const isFuture = d > today;
+      cells.push('<div style="aspect-ratio:1;border-radius:3px;background:' + (isFuture ? 'transparent' : colors[lvl]) + ';" title="' + dk(d) + ': ' + Math.round(pct*100) + '%"></div>');
+      d.setDate(d.getDate() + 1);
+    }
+    heatmap.innerHTML = cells.join('');
+  }
+
+  // Macro rings
+  const calData = [2340,3322,2200,2266,2330,2327,2188,1756,1680,2180,2436,2231,2824,2441];
+  const proData = [248,217,257,234,241,232,239,126,123,217,235,209,205,213];
+  const fatData = [65,140,60,89,82,84,84,22,90,72,90,69,128,99];
+  const carbData = calData.map((c, i) => Math.round((c - proData[i]*4 - fatData[i]*9) / 4));
+  const last7Cal = calData.slice(-7), last7Pro = proData.slice(-7);
+  const last7Carb = carbData.slice(-7), last7Fat = fatData.slice(-7);
+  const avgCal = avg(last7Cal), avgPro = avg(last7Pro), avgCarb = avg(last7Carb), avgFat = avg(last7Fat);
+
+  function setRing(id, valId, pct, val) {
+    const ring = document.getElementById(id);
+    const valEl = document.getElementById(valId);
+    if (ring) {
+      const p = Math.min(100, pct);
+      const currentBg = ring.style.background;
+      const color = currentBg.match(/conic-gradient\(([^)]+?) 0%/);
+      const c = color ? color[1] : 'var(--accent)';
+      ring.style.background = 'conic-gradient(' + c + ' 0% ' + p + '%, var(--line) ' + p + '% 100%)';
+    }
+    if (valEl) valEl.textContent = val;
+  }
+
+  if (avgCal > 0) {
+    setRing('ringCal', 'ringCalVal', avgCal/2350*100, Math.round(avgCal));
+    setRing('ringPro', 'ringProVal', avgPro/228*100, Math.round(avgPro) + 'g');
+    setRing('ringCarb', 'ringCarbVal', avgCarb/216*100, Math.round(avgCarb) + 'g');
+    setRing('ringFat', 'ringFatVal', avgFat/64*100, Math.round(avgFat) + 'g');
+  }
+
+  // Calorie spark bars
+  const sparkEl = document.getElementById('kpiCalSpark');
+  if (sparkEl) {
+    sparkEl.innerHTML = last7Cal.map(c => {
+      const h = Math.max(3, Math.round(c / 3500 * 32));
+      const color = (c >= 2200 && c <= 2500) ? 'var(--green)' : (c < 2100 || c > 2700) ? 'var(--red)' : 'var(--yellow)';
+      return '<div class="spark-bar" style="height:' + h + 'px;background:' + color + ';"></div>';
+    }).join('');
+  }
+  const calAvgLabel = document.getElementById('kpiCalAvgLabel');
+  if (calAvgLabel && avgCal > 0) {
+    const diff = avgCal - 2350;
+    const sign = diff >= 0 ? '+' : '';
+    calAvgLabel.innerHTML = 'Avg: <strong>' + Math.round(avgCal) + '</strong> cal/day (' + sign + diff + ' from target)';
+  }
+
+  // Weekly summary stats
+  const kpiAvgCal = document.getElementById('kpiAvgCal');
+  if (kpiAvgCal && avgCal > 0) kpiAvgCal.textContent = Math.round(avgCal).toLocaleString();
+  const kpiAvgPro = document.getElementById('kpiAvgPro');
+  if (kpiAvgPro && avgPro > 0) kpiAvgPro.textContent = Math.round(avgPro) + 'g';
+  const kpiHydration = document.getElementById('kpiHydration');
+  if (kpiHydration) kpiHydration.textContent = hydrationDoses + '/' + (daysWithData * 3);
+  const kpiSleepRate = document.getElementById('kpiSleepRate');
+  if (kpiSleepRate) kpiSleepRate.textContent = daysWithData ? Math.round(sleepHits / daysWithData * 100) + '%' : '\u2014';
+  const kpiOverallComp = document.getElementById('kpiOverallComp');
+  if (kpiOverallComp) {
+    kpiOverallComp.textContent = overallComp ? overallComp + '%' : '\u2014';
+    kpiOverallComp.style.color = overallComp >= 70 ? 'var(--green)' : overallComp >= 40 ? 'var(--yellow)' : 'var(--text)';
+  }
+}
+
+// ═══════ COMPLIANCE TRACKER ═══════
+const COMP_KEY = 'mp_compliance_';
+const COMP_CATS = ['nutrition','training','supplements','recovery'];
+
+function getCompData(weekKey) {
+  const d = localStorage.getItem(COMP_KEY + weekKey);
+  return d ? JSON.parse(d) : {};
+}
+function saveCompData(weekKey, data) {
+  localStorage.setItem(COMP_KEY + weekKey, JSON.stringify(data));
+}
+function weekKey(date) {
+  const d = new Date(date);
+  d.setDate(d.getDate() - d.getDay() + 1);
+  return dk(d);
+}
+
+function toggleComp(weekK, cat, dayIdx) {
+  const data = getCompData(weekK);
+  const key = cat + '_' + dayIdx;
+  if (!data[key]) data[key] = 'yes';
+  else if (data[key] === 'yes') data[key] = 'no';
+  else delete data[key];
+  saveCompData(weekK, data);
+  renderCompliance();
+  // Also sync to Supabase
+  try {
+    sb('compliance_data', {
+      method: 'POST',
+      headers: {'Prefer': 'resolution=merge-duplicates'},
+      body: JSON.stringify({week: weekK, data, updated_at: new Date().toISOString()})
+    });
+  } catch(e) {}
+}
+
+function renderCompliance() {
+  const grid = document.getElementById('compGrid');
+  if (!grid) return;
+  
+  const today = new Date();
+  const weeks = [];
+  for (let w = 0; w < 6; w++) {
+    const ws = new Date(today);
+    ws.setDate(ws.getDate() - ws.getDay() + 1 - (w * 7));
+    if (ws > today && w === 0) ws.setDate(ws.getDate() - 7);
+    weeks.push(ws);
+  }
+  
+  // Auto-populate from checklist data
+  weeks.forEach(ws => {
+    const wk = dk(ws);
+    const existing = getCompData(wk);
+    let hasAutoData = false;
+    for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
+      const d = new Date(ws);
+      d.setDate(d.getDate() + dayIdx);
+      if (d > today) continue;
+      const dayItems = getLocal(d);
+      if (Object.keys(dayItems).length > 0) {
+        COMP_CATS.forEach(cat => {
+          const key = cat + '_' + dayIdx;
+          if (!existing[key]) {
+            const score = getCatScore(dayItems, cat);
+            if (score >= 70) { existing[key] = 'yes'; hasAutoData = true; }
+            else if (score >= 40) { existing[key] = 'partial'; hasAutoData = true; }
+            else if (score > 0) { existing[key] = 'no'; hasAutoData = true; }
+          }
+        });
+      }
+    }
+    if (hasAutoData) saveCompData(wk, existing);
+  });
+  
+  let html = '';
+  let allScores = [];
+  let bestStreak = 0, currentStreak = 0;
+  let weeksLogged = 0;
+  
+  weeks.forEach((ws, wIdx) => {
+    const wk = dk(ws);
+    const data = getCompData(wk);
+    const weekLabel = wIdx === 0 ? 'This Wk' : 'Wk -' + wIdx;
+    let weekScore = 0, weekTotal = 0;
+    
+    COMP_CATS.forEach(cat => {
+      html += '<div class="comp-week-row">';
+      html += '<div class="comp-cat-label">' + (wIdx === 0 ? cat.charAt(0).toUpperCase() + cat.slice(1) : '') + '</div>';
+      
+      let catDone = 0, catTotal = 0;
+      for (let d = 0; d < 7; d++) {
+        const key = cat + '_' + d;
+        const val = data[key];
+        const dd = new Date(ws); dd.setDate(dd.getDate() + d);
+        const isFuture = dd > today;
+        
+        if (isFuture) {
+          html += '<div class="comp-cell empty" style="opacity:0.3;cursor:default;"></div>';
+        } else {
+          const cls = val === 'yes' ? 'yes' : val === 'no' ? 'no' : val === 'partial' ? 'partial' : 'empty';
+          const symbol = val === 'yes' ? '&#10003;' : val === 'no' ? '&#10007;' : val === 'partial' ? '~' : '';
+          html += '<div class="comp-cell ' + cls + '" onclick="toggleComp(\x27' + wk + '\x27,\x27' + cat + '\x27,' + d + ')">' + symbol + '</div>';
+          catTotal++;
+          if (val === 'yes') catDone++;
+          else if (val === 'partial') catDone += 0.5;
+        }
+      }
+      
+      weekTotal += catTotal;
+      weekScore += catDone;
+      const catPct = catTotal ? Math.round(catDone / catTotal * 100) : 0;
+      const catColor = catPct >= 80 ? 'var(--green)' : catPct >= 50 ? 'var(--yellow)' : catPct > 0 ? 'var(--red)' : 'var(--text3)';
+      html += '<div class="comp-score" style="color:' + catColor + ';">' + (catTotal ? catPct + '%' : '—') + '</div>';
+      html += '</div>';
+    });
+    
+    // Week separator
+    const weekPct = weekTotal ? Math.round(weekScore / weekTotal * 100) : 0;
+    if (weekTotal > 0) {
+      weeksLogged++;
+      allScores.push(weekPct);
+      if (weekPct >= 80) currentStreak++;
+      else { bestStreak = Math.max(bestStreak, currentStreak); currentStreak = 0; }
+    }
+    bestStreak = Math.max(bestStreak, currentStreak);
+    
+    if (wIdx < weeks.length - 1) {
+      html += '<div style="grid-column:1/-1;padding:6px 12px;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">' + weekLabel + ' &mdash; ' + (weekPct > 0 ? weekPct + '% overall' : 'No data') + '</div>';
+    }
+  });
+  
+  grid.innerHTML = html;
+  
+  // Summary cards
+  const overallAvg = allScores.length ? Math.round(allScores.reduce((a,b) => a+b, 0) / allScores.length) : 0;
+  const el = document.getElementById('compOverall');
+  if (el) el.textContent = overallAvg ? overallAvg + '%' : '—';
+  const bs = document.getElementById('compBestStreak');
+  if (bs) bs.textContent = bestStreak;
+  const wl = document.getElementById('compWeeksLogged');
+  if (wl) wl.textContent = weeksLogged;
+  const tw = document.getElementById('compThisWeek');
+  if (tw) tw.textContent = allScores.length ? allScores[0] + '%' : '—';
+  
+  // Heatmap
+  const heatmap = document.getElementById('compHeatmap');
+  if (heatmap) {
+    let heatHtml = '';
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dayItems = getLocal(d);
+      const total = 22; // approximate
+      const done = Object.keys(dayItems).length;
+      const pct = done / total;
+      let heat = 0;
+      if (pct >= 0.8) heat = 4;
+      else if (pct >= 0.6) heat = 3;
+      else if (pct >= 0.3) heat = 2;
+      else if (pct > 0) heat = 1;
+      heatHtml += '<div class="heat-cell heat-' + heat + '" title="' + dk(d) + ': ' + Math.round(pct*100) + '%"></div>';
+    }
+    // Pad to fill grid
+    const pad = (7 - (30 % 7)) % 7;
+    for (let i = 0; i < pad; i++) heatHtml += '<div class="heat-cell heat-0" style="opacity:0;"></div>';
+    heatmap.innerHTML = heatHtml;
+  }
+  
+  // Category breakdown table
+  const thisWeekKey = weekKey(today);
+  const thisWeekData = getCompData(thisWeekKey);
+  COMP_CATS.forEach(cat => {
+    let thisWkDone = 0, thisWkTotal = 0, allDone = 0, allTotal = 0;
+    for (let d = 0; d < 7; d++) {
+      const dd = new Date(); dd.setDate(dd.getDate() - dd.getDay() + 1 + d);
+      if (dd > today) continue;
+      thisWkTotal++;
+      const val = thisWeekData[cat + '_' + d];
+      if (val === 'yes') thisWkDone++;
+      else if (val === 'partial') thisWkDone += 0.5;
+    }
+    weeks.forEach(ws => {
+      const data = getCompData(dk(ws));
+      for (let d = 0; d < 7; d++) {
+        const dd = new Date(ws); dd.setDate(dd.getDate() + d);
+        if (dd > today) continue;
+        const val = data[cat + '_' + d];
+        if (val) { allTotal++; if (val === 'yes') allDone++; else if (val === 'partial') allDone += 0.5; }
+      }
+    });
+    const catName = cat.charAt(0).toUpperCase() + cat.slice(1);
+    const elWeek = document.getElementById('compCat' + catName.substring(0,4).replace(/i$/,'') + 'Week');
+    const elAll = document.getElementById('compCat' + catName.substring(0,4).replace(/i$/,'') + 'All');
+    // The IDs are Nutr, Train, Supp, Rec
+    const idMap = {nutrition:'Nutr', training:'Train', supplements:'Supp', recovery:'Rec'};
+    const wkEl = document.getElementById('compCat' + idMap[cat] + 'Week');
+    const allEl = document.getElementById('compCat' + idMap[cat] + 'All');
+    if (wkEl) {
+      const p = thisWkTotal ? Math.round(thisWkDone/thisWkTotal*100) : 0;
+      wkEl.innerHTML = p ? '<span class="pill ' + (p >= 80 ? 'pill-green' : p >= 50 ? 'pill-yellow' : 'pill-red') + '">' + p + '%</span>' : '—';
+    }
+    if (allEl) {
+      const p = allTotal ? Math.round(allDone/allTotal*100) : 0;
+      allEl.innerHTML = p ? '<span class="pill ' + (p >= 80 ? 'pill-green' : p >= 50 ? 'pill-yellow' : 'pill-red') + '">' + p + '%</span>' : '—';
+    }
+  });
+}
+
+// ═══════ PATCH NAV & INIT ═══════
+const _origGo = go;
+go = function(id) {
+  _origGo(id);
+  if (id === 'home') updateKPIDashboard();
+  if (id === 'compliance') renderCompliance();
+};
+
+// Override the toggle to also update KPI
+const _origToggle = toggle;
+toggle = async function(el) {
+  await _origToggle(el);
+  updateKPIDashboard();
+};
+
+// Init home on load
+setTimeout(() => { updateKPIDashboard(); renderCompliance(); }, 600);
+
 </script>
 </body>
 </html>
