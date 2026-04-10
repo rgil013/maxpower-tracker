@@ -476,6 +476,27 @@
     .check-item { padding: 10px 0; gap: 8px; font-size: 13px; }
     .check-cat { font-size: 9px; padding: 2px 6px; min-width: 50px; }
 
+    /* Logger — mobile */
+    .logger-form { padding: 14px; }
+    .logger-row { flex-wrap: wrap; gap: 6px; }
+    .logger-row label { min-width: 100%; text-align: left; font-size: 11px; margin-bottom: -2px; }
+    .logger-input, .logger-select { font-size: 16px; padding: 12px; }
+    .set-chips { gap: 6px; }
+    .set-chip { font-size: 12px; padding: 6px 10px; }
+    .logged-exercise { padding: 10px 12px; }
+    .logged-exercise .ex-name { font-size: 13px; }
+    .logged-exercise .ex-sets { font-size: 11px; }
+
+    /* Chat — mobile */
+    .chat-container { height: calc(100vh - 200px); max-height: none; border-radius: 10px; }
+    .chat-msg { max-width: 90%; font-size: 14px; padding: 10px 14px; }
+    .chat-input { font-size: 16px; padding: 10px 14px; }
+    .chat-send { width: 44px; height: 44px; }
+    .chat-suggestion { font-size: 12px; padding: 8px 12px; }
+
+    /* Center section titles */
+    .section-title { justify-content: center; text-align: center; }
+
     /* PIN screen — center properly on iPhone */
     #lockScreen > div { padding: 24px 20px; }
     #lockScreen h2 { font-size: 20px; }
@@ -650,6 +671,233 @@
   }
   .daily-streak strong { color: var(--fire); font-size: 18px; }
 
+  /* ─── ANIMATIONS ─── */
+  @keyframes checkPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .daily-item.just-checked .checkbox { animation: checkPop 0.3s ease; }
+  .tab.active { animation: fadeIn 0.2s ease; }
+  .daily-group { animation: slideUp 0.3s ease backwards; }
+  .daily-group:nth-child(2) { animation-delay: 0.05s; }
+  .daily-group:nth-child(3) { animation-delay: 0.1s; }
+  .daily-group:nth-child(4) { animation-delay: 0.15s; }
+  .daily-group:nth-child(5) { animation-delay: 0.2s; }
+
+  /* ─── TRAINING LOGGER ─── */
+  .logger-form {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .logger-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+  .logger-row label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--steel);
+    min-width: 70px;
+    text-align: right;
+  }
+  .logger-input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 2px solid var(--cloud);
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    transition: border-color 0.15s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .logger-input:focus { border-color: var(--fire); }
+  .logger-input::placeholder { color: var(--mist); }
+  .logger-select {
+    flex: 1;
+    padding: 12px 14px;
+    border: 2px solid var(--cloud);
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    background: var(--white);
+    -webkit-appearance: none;
+    outline: none;
+  }
+  .logger-select:focus { border-color: var(--fire); }
+  .logger-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--grad);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    min-height: 50px;
+    transition: transform 0.1s, box-shadow 0.15s;
+  }
+  .logger-btn:active { transform: scale(0.97); }
+  .logger-btn:hover { box-shadow: var(--shadow-fire); }
+  .logger-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .set-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .set-chip {
+    background: var(--ash);
+    color: var(--fire);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: fadeIn 0.2s ease;
+  }
+  .set-chip .remove {
+    cursor: pointer;
+    opacity: 0.5;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .set-chip .remove:hover { opacity: 1; }
+  .logged-exercise {
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--ember);
+    animation: fadeIn 0.3s ease;
+  }
+  .logged-exercise .ex-name { font-weight: 700; font-size: 14px; }
+  .logged-exercise .ex-sets { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--steel); margin-top: 4px; }
+
+  /* ─── AI CHAT ─── */
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 220px);
+    max-height: 600px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .chat-msg {
+    max-width: 85%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    animation: fadeIn 0.2s ease;
+  }
+  .chat-msg.user {
+    align-self: flex-end;
+    background: var(--grad);
+    color: white;
+    border-bottom-right-radius: 6px;
+  }
+  .chat-msg.ai {
+    align-self: flex-start;
+    background: var(--snow);
+    color: var(--coal);
+    border-bottom-left-radius: 6px;
+  }
+  .chat-msg.ai.typing { animation: pulse 1s infinite; color: var(--fog); }
+  .chat-input-wrap {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--cloud);
+    background: var(--white);
+  }
+  .chat-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid var(--cloud);
+    border-radius: 24px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .chat-input:focus { border-color: var(--fire); }
+  .chat-send {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--grad);
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-height: 44px;
+    transition: transform 0.1s;
+  }
+  .chat-send:active { transform: scale(0.9); }
+  .chat-send:disabled { opacity: 0.4; }
+  .chat-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 16px 12px;
+  }
+  .chat-suggestion {
+    padding: 8px 14px;
+    background: var(--ash);
+    color: var(--fire);
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 36px;
+    transition: background 0.1s;
+  }
+  .chat-suggestion:hover { background: var(--spark); }
+
   /* ─── PRINT ─── */
   @media print {
     .nav { display: none; }
@@ -704,6 +952,8 @@
   <button onclick="showTab('cardio')">Cardio</button>
   <button onclick="showTab('compliance')">Compliance</button>
   <button onclick="showTab('weight')">Body Stats</button>
+  <button onclick="showTab('logger')">Log Workout</button>
+  <button onclick="showTab('coach')">AI Coach</button>
   <button onclick="showTab('refeed')">Refeeds</button>
   <button onclick="showTab('reference')">Reference</button>
 </div>
@@ -1277,6 +1527,113 @@
 </div>
 
 <!-- ═══════════════════════════════════════ -->
+<!-- TAB: LOG WORKOUT                       -->
+<!-- ═══════════════════════════════════════ -->
+<div id="logger" class="tab">
+  <div class="section-title" style="justify-content:center;"><div class="icon">&#128170;</div> Log Workout</div>
+
+  <div class="logger-form">
+    <div class="logger-row">
+      <label>Split</label>
+      <select class="logger-select" id="logSplit">
+        <option value="">Select today's split...</option>
+        <option value="Push + Abs">Push + Abs</option>
+        <option value="Pull">Pull</option>
+        <option value="Legs + Abs">Legs + Abs</option>
+        <option value="Upper">Upper</option>
+        <option value="Lower + Abs">Lower + Abs</option>
+      </select>
+    </div>
+    <div class="logger-row">
+      <label>Exercise</label>
+      <select class="logger-select" id="logExercise">
+        <option value="">Select exercise...</option>
+        <optgroup label="Chest">
+          <option>Incline DB Press</option><option>Flat DB Press</option><option>Pec Deck</option><option>Dip Machine</option>
+        </optgroup>
+        <optgroup label="Back">
+          <option>Lat Pulldown</option><option>Lat Pulldown (close)</option><option>Barbell Row</option><option>Chest-Supported DB Row</option><option>Single Arm Cable Row</option>
+        </optgroup>
+        <optgroup label="Shoulders">
+          <option>Seated DB Press 75&deg;</option><option>Cable Lateral Raise</option><option>Reverse Pec Deck</option><option>Face Pulls</option>
+        </optgroup>
+        <optgroup label="Legs">
+          <option>Hack Squat</option><option>Leg Press</option><option>Stiff-Leg Deadlift</option><option>Leg Extension (slow ecc)</option><option>Seated Leg Curl</option><option>Hip Thrust Machine</option><option>Single-Leg RDL</option><option>Standing Leg Curl (BF)</option><option>Seated Calf Raise</option>
+        </optgroup>
+        <optgroup label="Arms">
+          <option>Incline DB Curl</option><option>Hammer Curl</option><option>EZ Bar Curl</option><option>OH DB Tricep Extension</option><option>Tricep Pushdown</option>
+        </optgroup>
+        <optgroup label="Abs">
+          <option>Cable Crunch</option><option>Hanging Knee Raise</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="logger-row">
+      <label>Weight</label>
+      <input type="number" class="logger-input" id="logWeight" placeholder="lbs" inputmode="numeric" style="flex:1">
+      <label style="min-width:40px">Reps</label>
+      <input type="number" class="logger-input" id="logReps" placeholder="#" inputmode="numeric" style="flex:0.7">
+      <label style="min-width:40px">RPE</label>
+      <input type="number" class="logger-input" id="logRPE" placeholder="7-10" inputmode="numeric" step="0.5" style="flex:0.7">
+    </div>
+    <button class="logger-btn" onclick="addSet()" style="margin-bottom:8px;">+ Add Set</button>
+
+    <div class="set-chips" id="setChips"></div>
+
+    <div class="logger-row" style="margin-top:4px;">
+      <label>Notes</label>
+      <input type="text" class="logger-input" id="logNotes" placeholder="Optional notes...">
+    </div>
+    <button class="logger-btn" onclick="saveExercise()" id="saveExBtn" disabled style="background:var(--coal);">Save Exercise</button>
+  </div>
+
+  <div style="text-align:center; margin-bottom:12px;">
+    <span style="font-size:13px; color:var(--fog); font-weight:500;" id="logDate"></span>
+    <span id="logSync" style="font-size:11px; margin-left:8px;"></span>
+  </div>
+
+  <div id="todaysLog"></div>
+
+  <div class="note" style="text-align:center; margin-top:16px;">
+    Exercises save to Supabase automatically. View history in the Training Log tab.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: AI COACH                          -->
+<!-- ═══════════════════════════════════════ -->
+<div id="coach" class="tab">
+  <div class="section-title" style="justify-content:center;"><div class="icon">&#129302;</div> AI Coach</div>
+
+  <div class="chat-container" id="chatContainer">
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg ai">Hey Robert. I'm your AI coach. I know your full protocol — macros, lifts, injuries, meds, everything. Ask me anything or tell me what you lifted today.</div>
+    </div>
+    <div class="chat-suggestions" id="chatSuggestions">
+      <button class="chat-suggestion" onclick="sendSuggestion(this)">Log my workout</button>
+      <button class="chat-suggestion" onclick="sendSuggestion(this)">Am I on track today?</button>
+      <button class="chat-suggestion" onclick="sendSuggestion(this)">What should I hit next?</button>
+      <button class="chat-suggestion" onclick="sendSuggestion(this)">Adjust my macros</button>
+    </div>
+    <div class="chat-input-wrap">
+      <input class="chat-input" id="chatInput" placeholder="Ask your coach..." onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" onclick="sendChat()" id="chatSendBtn">&#9654;</button>
+    </div>
+  </div>
+
+  <div id="aiKeySetup" style="display:none; text-align:center; padding:20px;">
+    <div class="card">
+      <div class="card-body">
+        <p style="font-size:14px; margin-bottom:12px;">To enable AI Coach, add your Anthropic API key:</p>
+        <input type="password" class="logger-input" id="aiKeyInput" placeholder="sk-ant-..." style="margin-bottom:12px; text-align:center;">
+        <button class="logger-btn" onclick="saveAIKey()">Save API Key</button>
+        <p class="note" style="margin-top:12px;">Your key is stored only on this device. It's sent to a secure Supabase Edge Function — never exposed in the browser.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
 <!-- TAB: REFEEDS                           -->
 <!-- ═══════════════════════════════════════ -->
 <div id="refeed" class="tab">
@@ -1685,6 +2042,214 @@ function goToday() {
   currentDate = new Date();
   renderDay();
 }
+
+// ─── TRAINING LOGGER ───
+let currentSets = [];
+
+function addSet() {
+  const weight = document.getElementById('logWeight').value;
+  const reps = document.getElementById('logReps').value;
+  const rpe = document.getElementById('logRPE').value;
+  if (!weight || !reps) return;
+
+  currentSets.push({ weight: +weight, reps: +reps, rpe: rpe ? +rpe : null });
+  renderSetChips();
+  document.getElementById('logReps').value = '';
+  document.getElementById('logRPE').value = '';
+  document.getElementById('logReps').focus();
+  document.getElementById('saveExBtn').disabled = false;
+  document.getElementById('saveExBtn').style.background = 'var(--grad)';
+}
+
+function removeSet(i) {
+  currentSets.splice(i, 1);
+  renderSetChips();
+  if (currentSets.length === 0) {
+    document.getElementById('saveExBtn').disabled = true;
+    document.getElementById('saveExBtn').style.background = 'var(--coal)';
+  }
+}
+
+function renderSetChips() {
+  const el = document.getElementById('setChips');
+  el.innerHTML = currentSets.map((s, i) =>
+    `<div class="set-chip">Set ${i+1}: ${s.weight}x${s.reps}${s.rpe ? ' @'+s.rpe : ''}<span class="remove" onclick="removeSet(${i})">&times;</span></div>`
+  ).join('');
+}
+
+async function saveExercise() {
+  const exercise = document.getElementById('logExercise').value;
+  const split = document.getElementById('logSplit').value;
+  const notes = document.getElementById('logNotes').value;
+  if (!exercise || currentSets.length === 0) return;
+
+  const btn = document.getElementById('saveExBtn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  const today = dateKey(new Date());
+
+  try {
+    await sbFetch('training_log', {
+      method: 'POST',
+      body: JSON.stringify({
+        date: today,
+        exercise: exercise,
+        sets: currentSets,
+        split: split,
+        notes: notes || null
+      })
+    });
+    document.getElementById('logSync').textContent = 'Saved!';
+    document.getElementById('logSync').style.color = 'var(--win)';
+    setTimeout(() => { document.getElementById('logSync').textContent = ''; }, 2000);
+  } catch (e) {
+    document.getElementById('logSync').textContent = 'Error saving';
+    document.getElementById('logSync').style.color = 'var(--fail)';
+  }
+
+  // Add to today's visual log
+  const logDiv = document.getElementById('todaysLog');
+  const setsStr = currentSets.map((s, i) => `Set ${i+1}: ${s.weight}x${s.reps}${s.rpe ? ' @RPE'+s.rpe : ''}`).join(' &nbsp;|&nbsp; ');
+  logDiv.innerHTML = `<div class="logged-exercise"><div class="ex-name">${exercise}${notes ? ' — <span style="font-weight:400;color:var(--fog)">' + notes + '</span>' : ''}</div><div class="ex-sets">${setsStr}</div></div>` + logDiv.innerHTML;
+
+  // Reset form
+  currentSets = [];
+  renderSetChips();
+  document.getElementById('logNotes').value = '';
+  document.getElementById('logExercise').value = '';
+  btn.textContent = 'Save Exercise';
+  btn.disabled = true;
+  btn.style.background = 'var(--coal)';
+}
+
+async function loadTodaysLog() {
+  const today = dateKey(new Date());
+  document.getElementById('logDate').textContent = formatDate(new Date()) + ' — Today\'s Session';
+  try {
+    const data = await sbFetch(`training_log?date=eq.${today}&order=created_at.asc&select=exercise,sets,notes,split`);
+    if (data && data.length > 0) {
+      const logDiv = document.getElementById('todaysLog');
+      logDiv.innerHTML = data.map(d => {
+        const setsStr = d.sets.map((s, i) => `Set ${i+1}: ${s.weight}x${s.reps}${s.rpe ? ' @RPE'+s.rpe : ''}`).join(' &nbsp;|&nbsp; ');
+        return `<div class="logged-exercise"><div class="ex-name">${d.exercise}${d.notes ? ' — <span style="font-weight:400;color:var(--fog)">' + d.notes + '</span>' : ''}</div><div class="ex-sets">${setsStr}</div></div>`;
+      }).join('');
+      if (data[0].split) document.getElementById('logSplit').value = data[0].split;
+    }
+  } catch (e) {}
+}
+
+// ─── AI COACH ───
+const AI_KEY_STORAGE = 'maxpower_ai_key';
+let chatHistory = [];
+
+function getAIKey() {
+  return localStorage.getItem(AI_KEY_STORAGE);
+}
+
+function saveAIKey() {
+  const key = document.getElementById('aiKeyInput').value.trim();
+  if (key) {
+    localStorage.setItem(AI_KEY_STORAGE, key);
+    document.getElementById('aiKeySetup').style.display = 'none';
+    document.getElementById('chatContainer').style.display = 'flex';
+  }
+}
+
+function initCoach() {
+  const key = getAIKey();
+  if (!key) {
+    document.getElementById('chatContainer').style.display = 'none';
+    document.getElementById('aiKeySetup').style.display = 'block';
+  }
+}
+
+function sendSuggestion(btn) {
+  document.getElementById('chatInput').value = btn.textContent;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const key = getAIKey();
+  if (!key) { initCoach(); return; }
+
+  // Add user message
+  addChatMsg(msg, 'user');
+  input.value = '';
+  document.getElementById('chatSuggestions').style.display = 'none';
+
+  // Show typing indicator
+  const typingEl = addChatMsg('Thinking...', 'ai typing');
+
+  chatHistory.push({ role: 'user', content: msg });
+
+  try {
+    const res = await sbFetch('', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    // Call edge function directly
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/ai-coach`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'x-api-key': key
+      },
+      body: JSON.stringify({
+        message: msg,
+        history: chatHistory.slice(-10)
+      })
+    });
+
+    typingEl.remove();
+
+    if (response.ok) {
+      const data = await response.json();
+      const reply = data.reply || data.error || 'No response';
+      addChatMsg(reply, 'ai');
+      chatHistory.push({ role: 'assistant', content: reply });
+    } else {
+      const err = await response.text();
+      if (err.includes('API key') || response.status === 401) {
+        addChatMsg('I need an Anthropic API key to work. Check your key and try again.', 'ai');
+        localStorage.removeItem(AI_KEY_STORAGE);
+        setTimeout(initCoach, 2000);
+      } else {
+        addChatMsg('Something went wrong. Try again in a moment.', 'ai');
+      }
+    }
+  } catch (e) {
+    typingEl.remove();
+    addChatMsg('Could not reach the server. Check your connection.', 'ai');
+  }
+}
+
+function addChatMsg(text, cls) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + cls;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+// ─── INIT LOGGER + COACH ON LOAD ───
+const origInit = document.addEventListener;
+document.addEventListener('DOMContentLoaded', () => {
+  loadTodaysLog();
+  initCoach();
+});
 
 // ─── SERVICE WORKER ───
 if ('serviceWorker' in navigator) {
