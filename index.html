@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>MaxPower Blueprint v2 — Tracker</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#E8450E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MaxPower">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --fire: #E8450E;
+    --ember: #FF6B35;
+    --glow: #FF8F5E;
+    --spark: #FFB088;
+    --ash: #FFF0E8;
+    --coal: #1A1A1A;
+    --smoke: #2D2D2D;
+    --steel: #4A4A4A;
+    --fog: #8A8A8A;
+    --mist: #B8B8B8;
+    --cloud: #E8E8E8;
+    --snow: #F5F5F5;
+    --white: #FFFFFF;
+    --win: #22C55E;
+    --warn: #F59E0B;
+    --fail: #EF4444;
+    --info: #3B82F6;
+    --grad: linear-gradient(135deg, var(--fire) 0%, var(--ember) 50%, var(--glow) 100%);
+    --grad-dark: linear-gradient(135deg, #B8350A 0%, var(--fire) 100%);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+    --shadow-fire: 0 4px 20px rgba(232,69,14,0.2);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--snow);
+    color: var(--coal);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── HERO HEADER ─── */
+  .hero {
+    background: var(--grad);
+    padding: 32px 40px 20px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .hero .subtitle {
+    font-size: 14px;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+  .hero .stats-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .hero .stat {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    min-width: 120px;
+  }
+  .hero .stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    font-weight: 500;
+  }
+  .hero .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ─── NAV TABS ─── */
+  .nav {
+    display: flex;
+    gap: 2px;
+    background: var(--white);
+    padding: 0 24px;
+    border-bottom: 1px solid var(--cloud);
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+  .nav button {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 14px 18px;
+    border: none;
+    background: none;
+    color: var(--fog);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav button:hover { color: var(--steel); }
+  .nav button.active {
+    color: var(--fire);
+    border-bottom-color: var(--fire);
+    font-weight: 600;
+  }
+
+  /* ─── CONTENT ─── */
+  .content { max-width: 1400px; margin: 0 auto; padding: 24px; }
+  .tab { display: none; }
+  .tab.active { display: block; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 16px 20px;
+    font-weight: 700;
+    font-size: 15px;
+    border-bottom: 1px solid var(--cloud);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-header .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--fire);
+  }
+  .card-body { padding: 16px 20px; }
+  .card-fire .card-header {
+    background: var(--grad);
+    color: white;
+    border: none;
+  }
+  .card-fire .card-header .dot { background: rgba(255,255,255,0.5); }
+
+  /* ─── TABLES ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    background: var(--coal);
+    color: white;
+    padding: 10px 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+  }
+  th.fire { background: var(--grad); }
+  td {
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--cloud);
+    font-variant-numeric: tabular-nums;
+  }
+  tr:nth-child(even) td { background: var(--snow); }
+  tr:hover td { background: var(--ash); }
+  td.left { text-align: left; }
+  td.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+  /* ─── BADGES ─── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-win { background: #DCFCE7; color: #166534; }
+  .badge-fail { background: #FEE2E2; color: #991B1B; }
+  .badge-warn { background: #FEF3C7; color: #92400E; }
+  .badge-fire { background: var(--ash); color: var(--fire); }
+  .badge-info { background: #DBEAFE; color: #1E40AF; }
+  .badge-done { background: #DCFCE7; color: #166534; }
+  .badge-urgent { background: #EF4444; color: white; }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-wrap {
+    background: var(--cloud);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    border-radius: 20px;
+    background: var(--grad);
+    transition: width 0.5s ease;
+  }
+
+  /* ─── GRID ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* ─── METRIC TILES ─── */
+  .metric {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--fire);
+  }
+  .metric-label { font-size: 12px; color: var(--fog); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .metric-value { font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--coal); margin: 4px 0; }
+  .metric-sub { font-size: 12px; color: var(--fog); }
+
+  /* ─── SESSION CARD ─── */
+  .session {
+    border-left: 3px solid var(--ember);
+    padding-left: 16px;
+    margin-bottom: 24px;
+  }
+  .session-date { font-weight: 700; font-size: 14px; color: var(--fire); }
+  .session-split { font-weight: 600; color: var(--steel); font-size: 13px; margin-bottom: 8px; }
+
+  /* ─── CHECKLIST ─── */
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--cloud);
+    font-size: 13px;
+  }
+  .check-cat {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: 60px;
+    text-align: center;
+  }
+  .cat-train { background: #FEE2E2; color: #991B1B; }
+  .cat-cardio { background: #FCE7F3; color: #9D174D; }
+  .cat-nutr { background: #DCFCE7; color: #166534; }
+  .cat-supps { background: #DBEAFE; color: #1E40AF; }
+  .cat-recov { background: #F3E8FF; color: #5B21B6; }
+
+  /* ─── PHASE TIMELINE ─── */
+  .phase-bar {
+    display: flex;
+    border-radius: var(--radius);
+    overflow: hidden;
+    height: 40px;
+    margin: 12px 0;
+  }
+  .phase-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 0 12px;
+  }
+
+  /* ─── NOTES ─── */
+  .note {
+    font-size: 12px;
+    color: var(--fog);
+    font-style: italic;
+    padding: 8px 12px;
+    background: var(--snow);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--mist);
+    margin-top: 8px;
+  }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .icon {
+    width: 32px;
+    height: 32px;
+    background: var(--grad);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .hero { padding: 20px; }
+    .content { padding: 16px; }
+    .nav button { padding: 12px 14px; font-size: 12px; }
+  }
+
+  /* ─── TECHNIQUE TAG ─── */
+  .tech {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--ash);
+    color: var(--fire);
+    white-space: nowrap;
+  }
+
+  /* ─── DAILY CHECKLIST ─── */
+  .daily-date-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .daily-date-nav button {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    border: 1px solid var(--cloud);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--steel);
+    transition: all 0.15s;
+  }
+  .daily-date-nav button:hover { border-color: var(--fire); color: var(--fire); }
+  .daily-date-nav .current-date {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--coal);
+    min-width: 200px;
+    text-align: center;
+  }
+  .daily-score {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .daily-score .score-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .daily-score .score-text { font-size: 14px; color: var(--steel); }
+  .daily-score .score-text strong { font-size: 16px; color: var(--coal); display: block; margin-bottom: 2px; }
+
+  .daily-group {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .daily-group-header {
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--cloud);
+  }
+  .daily-group-header .group-icon {
+    font-size: 16px;
+  }
+
+  .daily-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--cloud);
+    cursor: pointer;
+    transition: background 0.1s;
+    user-select: none;
+  }
+  .daily-item:last-child { border-bottom: none; }
+  .daily-item:hover { background: var(--snow); }
+  .daily-item.checked { background: #F0FDF4; }
+  .daily-item.checked .item-text { color: var(--fog); text-decoration: line-through; }
+
+  .daily-item .checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--mist);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-size: 13px;
+    color: transparent;
+  }
+  .daily-item.checked .checkbox {
+    background: var(--fire);
+    border-color: var(--fire);
+    color: white;
+  }
+  .daily-item .item-text { font-size: 14px; font-weight: 500; flex: 1; }
+  .daily-item .item-time {
+    font-size: 11px;
+    color: var(--fog);
+    font-weight: 500;
+    background: var(--snow);
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .daily-item.checked .item-time { opacity: 0.5; }
+
+  .daily-streak {
+    text-align: center;
+    padding: 12px;
+    font-size: 13px;
+    color: var(--fog);
+    background: var(--snow);
+    border-radius: var(--radius-sm);
+    margin-top: 16px;
+  }
+  .daily-streak strong { color: var(--fire); font-size: 18px; }
+
+  /* ─── PRINT ─── */
+  @media print {
+    .nav { display: none; }
+    .tab { display: block !important; page-break-after: always; }
+    .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ PIN LOCK ═══════ -->
+<div id="lockScreen" style="display:none; position:fixed; inset:0; z-index:9999; background:var(--snow); display:flex; align-items:center; justify-content:center;">
+  <div style="text-align:center; padding:40px;">
+    <div style="width:64px;height:64px;border-radius:16px;background:var(--grad);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;">
+      <span style="font-size:28px;color:white;">&#128293;</span>
+    </div>
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:4px;">MaxPower</h2>
+    <p style="color:var(--fog);font-size:13px;margin-bottom:24px;">Enter your PIN to continue</p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
+      <input id="pin1" type="tel" maxlength="1" style="width:48px;height:56px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--cloud);border-radius:12px;outline:none;font-family:'JetBrains Mono',monospace;" oninput="pinNext(1)" autofocus>
+      <input id="pin2" type="tel" maxlength="1" style="width:48px;height:56px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--cloud);border-radius:12px;outline:none;font-family:'JetBrains Mono',monospace;" oninput="pinNext(2)">
+      <input id="pin3" type="tel" maxlength="1" style="width:48px;height:56px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--cloud);border-radius:12px;outline:none;font-family:'JetBrains Mono',monospace;" oninput="pinNext(3)">
+      <input id="pin4" type="tel" maxlength="1" style="width:48px;height:56px;text-align:center;font-size:24px;font-weight:700;border:2px solid var(--cloud);border-radius:12px;outline:none;font-family:'JetBrains Mono',monospace;" oninput="pinNext(4)">
+    </div>
+    <p id="pinError" style="color:var(--fail);font-size:13px;font-weight:600;min-height:20px;"></p>
+    <p style="color:var(--mist);font-size:11px;margin-top:16px;">First time? Enter a 4-digit PIN to set it.</p>
+  </div>
+</div>
+
+<div id="appContent" style="display:none;">
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <h1>MAXPOWER BLUEPRINT v2</h1>
+  <div class="subtitle">Robert Gil &bull; 31 &bull; 5'11" &bull; Classic Physique &bull; Logan Franklin</div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-label">Current</div><div class="stat-value">190</div></div>
+    <div class="stat"><div class="stat-label">Target</div><div class="stat-value">175</div></div>
+    <div class="stat"><div class="stat-label">Body Fat</div><div class="stat-value">~20%</div></div>
+    <div class="stat"><div class="stat-label">Target BF</div><div class="stat-value">12%</div></div>
+    <div class="stat"><div class="stat-label">Deficit</div><div class="stat-value">500</div></div>
+    <div class="stat"><div class="stat-label">Timeline</div><div class="stat-value">16wk</div></div>
+  </div>
+</div>
+
+<!-- ═══════ NAV ═══════ -->
+<div class="nav">
+  <button class="active" onclick="showTab('daily')">Daily</button>
+  <button onclick="showTab('dash')">Dashboard</button>
+  <button onclick="showTab('nutrition')">Nutrition</button>
+  <button onclick="showTab('training')">Training Log</button>
+  <button onclick="showTab('progression')">Progression</button>
+  <button onclick="showTab('cardio')">Cardio</button>
+  <button onclick="showTab('compliance')">Compliance</button>
+  <button onclick="showTab('weight')">Body Stats</button>
+  <button onclick="showTab('refeed')">Refeeds</button>
+  <button onclick="showTab('reference')">Reference</button>
+</div>
+
+<div class="content">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: DAILY                             -->
+<!-- ═══════════════════════════════════════ -->
+<div id="daily" class="tab active">
+
+  <div class="daily-date-nav">
+    <button onclick="changeDay(-1)">&larr; Prev</button>
+    <div class="current-date" id="currentDateLabel"></div>
+    <button onclick="changeDay(1)">Next &rarr;</button>
+    <button onclick="goToday()" style="background:var(--fire);color:white;border-color:var(--fire);">Today</button>
+    <span id="syncStatus" style="font-size:12px;font-weight:500;margin-left:auto;"></span>
+  </div>
+
+  <div class="daily-score" id="dailyScore">
+    <div class="score-ring" id="scoreRing">0%</div>
+    <div class="score-text">
+      <strong id="scoreLabel">Start checking off tasks</strong>
+      <span id="scoreDetail">0 of 22 tasks completed</span>
+    </div>
+  </div>
+
+  <div id="dailyChecklist">
+
+    <div class="daily-group">
+      <div class="daily-group-header" style="color:#B8350A; background:#FFF5F0;">
+        <span class="group-icon">&#9728;</span> MORNING (Before Gym)
+      </div>
+      <div class="daily-item" data-id="eat-before-adderall" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Eat breakfast before taking Adderall</div>
+        <div class="item-time">Within 30 min of waking</div>
+      </div>
+      <div class="daily-item" data-id="am-supplements" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Take AM supplements (creatine, multi, fish oil, Clomid, boron)</div>
+        <div class="item-time">With breakfast</div>
+      </div>
+      <div class="daily-item" data-id="liquid-iv-1" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Drink Liquid IV #1</div>
+        <div class="item-time">Morning</div>
+      </div>
+      <div class="daily-item" data-id="adderall-window-meal" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Core Power Elite during Adderall appetite window</div>
+        <div class="item-time">2-3 hrs post-dose</div>
+      </div>
+    </div>
+
+    <div class="daily-group">
+      <div class="daily-group-header" style="color:#E8450E; background:#FFF0E8;">
+        <span class="group-icon">&#127947;</span> PRE-WORKOUT
+      </div>
+      <div class="daily-item" data-id="preworkout-meal" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Eat pre-workout meal (500+ cal)</div>
+        <div class="item-time">60-90 min before gym</div>
+      </div>
+      <div class="daily-item" data-id="liquid-iv-2" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Drink Liquid IV #2</div>
+        <div class="item-time">Pre/during training</div>
+      </div>
+      <div class="daily-item" data-id="shoulder-warmup" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Shoulder warm-up (band pull-aparts + external rotations)</div>
+        <div class="item-time">Before session</div>
+      </div>
+    </div>
+
+    <div class="daily-group">
+      <div class="daily-group-header" style="color:#991B1B; background:#FEF2F2;">
+        <span class="group-icon">&#128170;</span> TRAINING
+      </div>
+      <div class="daily-item" data-id="session-complete" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Complete today's training session</div>
+        <div class="item-time">~60-80 min</div>
+      </div>
+      <div class="daily-item" data-id="rpe-check" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">RPE 7-8 on all working sets (no set-1 failures)</div>
+        <div class="item-time">Every set</div>
+      </div>
+      <div class="daily-item" data-id="eccentrics" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Controlled eccentrics on every rep (2-3s minimum)</div>
+        <div class="item-time">Every rep</div>
+      </div>
+      <div class="daily-item" data-id="intensity-tech" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Intensity technique on last set of designated exercises</div>
+        <div class="item-time">Last sets only</div>
+      </div>
+      <div class="daily-item" data-id="abs-done" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Abs completed (if Push/Legs/Lower day)</div>
+        <div class="item-time">End of session</div>
+      </div>
+      <div class="daily-item" data-id="cardio-done" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Post-workout LISS cardio completed</div>
+        <div class="item-time">10-20 min</div>
+      </div>
+    </div>
+
+    <div class="daily-group">
+      <div class="daily-group-header" style="color:#166534; background:#F0FDF4;">
+        <span class="group-icon">&#127860;</span> NUTRITION
+      </div>
+      <div class="daily-item" data-id="post-workout-meal" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Post-workout meal within 60 min</div>
+        <div class="item-time">After gym</div>
+      </div>
+      <div class="daily-item" data-id="protein-target" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Hit 228g+ protein today</div>
+        <div class="item-time">End of day check</div>
+      </div>
+      <div class="daily-item" data-id="calorie-target" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Calories within 2,200-2,500 range</div>
+        <div class="item-time">End of day check</div>
+      </div>
+      <div class="daily-item" data-id="meals-spread" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">5-6 meals today (no 80g+ protein dumps)</div>
+        <div class="item-time">Throughout day</div>
+      </div>
+      <div class="daily-item" data-id="no-junk" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">No unplanned fast food or binge eating</div>
+        <div class="item-time">All day</div>
+      </div>
+    </div>
+
+    <div class="daily-group">
+      <div class="daily-group-header" style="color:#5B21B6; background:#F3E8FF;">
+        <span class="group-icon">&#127769;</span> EVENING &amp; RECOVERY
+      </div>
+      <div class="daily-item" data-id="liquid-iv-3" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Drink Liquid IV #3</div>
+        <div class="item-time">Afternoon/Evening</div>
+      </div>
+      <div class="daily-item" data-id="magnesium" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">Take Magnesium Glycinate 400mg</div>
+        <div class="item-time">30-60 min before bed</div>
+      </div>
+      <div class="daily-item" data-id="hydration" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">100+ oz fluids today (Liquid IV / ORS-based)</div>
+        <div class="item-time">Throughout day</div>
+      </div>
+      <div class="daily-item" data-id="sleep-time" onclick="toggleItem(this)">
+        <div class="checkbox">&#10003;</div>
+        <div class="item-text">In bed by consistent time (7-9 hrs target)</div>
+        <div class="item-time">Bedtime</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="daily-streak">
+    Completed days: <strong id="streakCount">0</strong><br>
+    <span style="font-size:11px">A completed day = 80%+ tasks checked. Data saved to your browser automatically.</span>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: DASHBOARD                         -->
+<!-- ═══════════════════════════════════════ -->
+<div id="dash" class="tab">
+
+  <div class="section-title"><div class="icon">&#9889;</div> Phase Timeline</div>
+  <div class="phase-bar">
+    <div class="phase-seg" style="flex:4; background:#B8350A;">Phase 1: Foundation (Wk 1-4)</div>
+    <div class="phase-seg" style="flex:4; background:#E8450E;">Phase 2: Acceleration (Wk 5-8)</div>
+    <div class="phase-seg" style="flex:4; background:#FF6B35;">Phase 3: Push (Wk 9-12)</div>
+    <div class="phase-seg" style="flex:4; background:#FF8F5E; color: #5C2200;">Phase 4: Finish (Wk 13-16)</div>
+  </div>
+  <div class="note">Diet breaks at Wk 7-8 and Wk 14 (if needed). Deloads at Wk 4, 8, 12.</div>
+
+  <div style="height:24px"></div>
+  <div class="grid-4">
+    <div class="metric"><div class="metric-label">Wk 1 Avg Cal</div><div class="metric-value">2,425</div><div class="metric-sub">+75 over target</div></div>
+    <div class="metric"><div class="metric-label">Wk 1 Avg Protein</div><div class="metric-value">238g</div><div class="metric-sub" style="color:var(--win)">+10g over target</div></div>
+    <div class="metric"><div class="metric-label">Wk 2 Avg Cal</div><div class="metric-value">2,221</div><div class="metric-sub" style="color:var(--warn)">-129 under target</div></div>
+    <div class="metric"><div class="metric-label">Wk 2 Avg Protein</div><div class="metric-value">190g</div><div class="metric-sub" style="color:var(--fail)">-38g under target</div></div>
+  </div>
+
+  <div style="height:24px"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="dot"></div>Weekly Overview</div>
+      <div class="card-body" style="padding:0; overflow-x:auto;">
+        <table>
+          <tr><th class="fire">Week</th><th class="fire">Avg Cal</th><th class="fire">Avg P</th><th class="fire">Sessions</th><th class="fire">Weight</th><th class="fire">Status</th></tr>
+          <tr><td>Wk 1</td><td class="mono">2,425</td><td class="mono">238g</td><td>4</td><td class="mono">190</td><td><span class="badge badge-warn">OK</span></td></tr>
+          <tr><td>Wk 2</td><td class="mono">2,221</td><td class="mono">190g</td><td>2</td><td class="mono">—</td><td><span class="badge badge-fail">FIX</span></td></tr>
+          <tr><td>Wk 3</td><td class="mono">—</td><td class="mono">—</td><td>—</td><td class="mono">—</td><td><span class="badge badge-info">IN PROGRESS</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot"></div>Training Volume (v2)</div>
+      <div class="card-body" style="padding:0; overflow-x:auto;">
+        <table>
+          <tr><th class="fire">Muscle</th><th class="fire">Sets/Wk</th><th class="fire">Freq</th><th class="fire">Change</th></tr>
+          <tr><td class="left">Side Delts</td><td class="mono">10</td><td>3x</td><td><span class="badge badge-fire">+233%</span></td></tr>
+          <tr><td class="left">Biceps</td><td class="mono">8</td><td>2x</td><td><span class="badge badge-fire">+100%</span></td></tr>
+          <tr><td class="left">Triceps</td><td class="mono">9</td><td>2x</td><td><span class="badge badge-fire">+125%</span></td></tr>
+          <tr><td class="left">Abs</td><td class="mono">9</td><td>3x</td><td><span class="badge badge-fire">NEW</span></td></tr>
+          <tr><td class="left">Chest</td><td class="mono">12</td><td>2x</td><td>—</td></tr>
+          <tr><td class="left">Back</td><td class="mono">15</td><td>2x</td><td>—</td></tr>
+          <tr><td class="left">Quads</td><td class="mono">20</td><td>2x</td><td>—</td></tr>
+          <tr><td class="left">Hamstrings</td><td class="mono">12</td><td>2x</td><td>—</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:8px"></div>
+  <div class="card card-fire">
+    <div class="card-header"><div class="dot"></div>Key Lift Progression</div>
+    <div class="card-body" style="padding:0; overflow-x:auto;">
+      <table>
+        <tr><th>Exercise</th><th>Baseline</th><th>Wk 1 Best</th><th>Wk 2 Best</th><th>Next Target</th><th>Trend</th></tr>
+        <tr><td class="left">Hack Squat</td><td class="mono">240x10</td><td class="mono">240x10</td><td class="mono">—</td><td class="mono">260</td><td>—</td></tr>
+        <tr><td class="left">Leg Press</td><td class="mono">370x12</td><td class="mono">370x12</td><td class="mono">—</td><td class="mono">400</td><td>—</td></tr>
+        <tr><td class="left">Incline DB Press</td><td class="mono">80x8</td><td class="mono">90x7</td><td class="mono">—</td><td class="mono">85x10</td><td>—</td></tr>
+        <tr><td class="left">Flat DB Press</td><td class="mono">—</td><td class="mono">—</td><td class="mono">80x10*</td><td class="mono">85</td><td><span class="badge badge-info">NEW</span></td></tr>
+        <tr><td class="left">Lat Pulldown</td><td class="mono">115x12</td><td class="mono">115x12</td><td class="mono">120x12</td><td class="mono">125</td><td style="color:var(--win);">&#9650;</td></tr>
+        <tr><td class="left">DB Press 75&deg;</td><td class="mono">35x12</td><td class="mono">35x12</td><td class="mono">40x11</td><td class="mono">40x12</td><td style="color:var(--win);">&#9650;</td></tr>
+        <tr><td class="left">Pec Deck</td><td class="mono">205x12</td><td class="mono">205x12</td><td class="mono">175x10</td><td class="mono">185</td><td>&#9644;</td></tr>
+        <tr><td class="left">Dip Machine</td><td class="mono">—</td><td class="mono">—</td><td class="mono">180x10</td><td class="mono">180x12</td><td><span class="badge badge-info">NEW</span></td></tr>
+        <tr><td class="left">Barbell Row</td><td class="mono">155x8</td><td class="mono">155x8</td><td class="mono">—</td><td class="mono">155 w/ecc</td><td>—</td></tr>
+      </table>
+      <div class="note">* = underfueled session (not true baseline)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: NUTRITION                         -->
+<!-- ═══════════════════════════════════════ -->
+<div id="nutrition" class="tab">
+  <div class="section-title"><div class="icon">&#127860;</div> Daily Nutrition</div>
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Cal Target</div><div class="metric-value">2,350</div></div>
+    <div class="metric"><div class="metric-label">Protein</div><div class="metric-value">228g</div></div>
+    <div class="metric"><div class="metric-label">Carbs</div><div class="metric-value">168g</div></div>
+    <div class="metric"><div class="metric-label">Fat</div><div class="metric-value">85g</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>Week 1 (Mar 26 – Apr 1) &nbsp;<span class="badge badge-warn">Avg P: 238g</span></div>
+    <div class="card-body" style="padding:0;overflow-x:auto">
+      <table>
+        <tr><th class="fire">Day</th><th class="fire">Date</th><th class="fire">Cal</th><th class="fire">P</th><th class="fire">C</th><th class="fire">F</th><th class="fire">Cal%</th><th class="fire">P Hit?</th><th class="fire">Training</th><th class="fire">Notes</th></tr>
+        <tr><td>Thu</td><td>Mar 26</td><td class="mono">2,340</td><td class="mono">248</td><td class="mono">200</td><td class="mono">65</td><td class="mono">100%</td><td><span class="badge badge-win">YES</span></td><td>None</td><td class="left" style="font-size:11px">First tracked day</td></tr>
+        <tr><td>Fri</td><td>Mar 27</td><td class="mono" style="color:var(--fail)">3,322</td><td class="mono">217</td><td class="mono">309</td><td class="mono" style="color:var(--fail)">140</td><td class="mono" style="color:var(--fail)">141%</td><td><span class="badge badge-fail">NO</span></td><td>Legs</td><td class="left" style="font-size:11px">CHEAT MEAL +972 cal</td></tr>
+        <tr><td>Sat</td><td>Mar 28</td><td class="mono">2,200</td><td class="mono" style="color:var(--win)">257</td><td class="mono">139</td><td class="mono">60</td><td class="mono">94%</td><td><span class="badge badge-win">YES</span></td><td>Pull</td><td class="left" style="font-size:11px">522 cal pre-gym. Flat.</td></tr>
+        <tr><td>Sun</td><td>Mar 29</td><td class="mono">2,266</td><td class="mono">234</td><td class="mono">139</td><td class="mono">89</td><td class="mono">96%</td><td><span class="badge badge-win">YES</span></td><td>Rest</td><td class="left" style="font-size:11px"></td></tr>
+        <tr><td>Mon</td><td>Mar 30</td><td class="mono">2,330</td><td class="mono">241</td><td class="mono">176</td><td class="mono">82</td><td class="mono">99%</td><td><span class="badge badge-win">YES</span></td><td>Upper</td><td class="left" style="font-size:11px">NEW FAT TGT 85g. Near perfect.</td></tr>
+        <tr><td>Tue</td><td>Mar 31</td><td class="mono">2,327</td><td class="mono">232</td><td class="mono">168</td><td class="mono">84</td><td class="mono">99%</td><td><span class="badge badge-win">YES</span></td><td>Aborted</td><td class="left" style="font-size:11px">Too sore. THC drink.</td></tr>
+        <tr><td>Wed</td><td>Apr 1</td><td class="mono">2,188</td><td class="mono">239</td><td class="mono">135</td><td class="mono">84</td><td class="mono">93%</td><td><span class="badge badge-win">YES</span></td><td>Lower</td><td class="left" style="font-size:11px">Eccentrics clicked.</td></tr>
+        <tr style="background:var(--ash)"><td colspan="2"><strong>AVERAGE</strong></td><td class="mono"><strong>2,425</strong></td><td class="mono"><strong>238</strong></td><td class="mono"><strong>181</strong></td><td class="mono"><strong>86</strong></td><td class="mono"><strong>103%</strong></td><td><strong>6/7</strong></td><td colspan="2"><span class="badge badge-warn">P hit rate: 86%</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot" style="background:var(--fail)"></div>Week 2 (Apr 2 – Apr 8) &nbsp;<span class="badge badge-fail">Avg P: 190g (-38)</span></div>
+    <div class="card-body" style="padding:0;overflow-x:auto">
+      <table>
+        <tr><th class="fire">Day</th><th class="fire">Date</th><th class="fire">Cal</th><th class="fire">P</th><th class="fire">C</th><th class="fire">F</th><th class="fire">Cal%</th><th class="fire">P Hit?</th><th class="fire">Training</th><th class="fire">Notes</th></tr>
+        <tr><td>Thu</td><td>Apr 2</td><td class="mono" style="color:var(--fail)">1,756</td><td class="mono" style="color:var(--fail)">126</td><td class="mono">264</td><td class="mono" style="color:var(--fail)">22</td><td class="mono" style="color:var(--fail)">75%</td><td><span class="badge badge-fail">NO</span></td><td>Push</td><td class="left" style="font-size:11px">310 cal pre-gym. -594 cal.</td></tr>
+        <tr><td>Fri</td><td>Apr 3</td><td class="mono" style="color:var(--fail)">1,680</td><td class="mono" style="color:var(--fail)">123</td><td class="mono">122</td><td class="mono">90</td><td class="mono" style="color:var(--fail)">71%</td><td><span class="badge badge-fail">NO</span></td><td>Rest</td><td class="left" style="font-size:11px">P: -105g under.</td></tr>
+        <tr><td>Sat</td><td>Apr 4</td><td class="mono">2,180</td><td class="mono">217</td><td class="mono">184</td><td class="mono">72</td><td class="mono">93%</td><td><span class="badge badge-fail">NO</span></td><td>Rest</td><td class="left" style="font-size:11px">Gym closed.</td></tr>
+        <tr><td>Sun</td><td>Apr 5</td><td class="mono">2,436</td><td class="mono" style="color:var(--win)">235</td><td class="mono">203</td><td class="mono">90</td><td class="mono">104%</td><td><span class="badge badge-win">YES</span></td><td>Pull</td><td class="left" style="font-size:11px;color:var(--win)"><strong>BEST DAY.</strong> All targets hit.</td></tr>
+        <tr><td>Mon</td><td>Apr 6</td><td class="mono">2,231</td><td class="mono">209</td><td class="mono">212</td><td class="mono">69</td><td class="mono">95%</td><td><span class="badge badge-fail">NO</span></td><td>Rest</td><td class="left" style="font-size:11px"></td></tr>
+        <tr><td>Tue</td><td>Apr 7</td><td class="mono" style="color:var(--fail)">2,824</td><td class="mono">205</td><td class="mono">222</td><td class="mono" style="color:var(--fail)">128</td><td class="mono" style="color:var(--fail)">120%</td><td><span class="badge badge-fail">NO</span></td><td>—</td><td class="left" style="font-size:11px;color:var(--fail)">TB + CFA binge. +474 cal.</td></tr>
+        <tr><td>Wed</td><td>Apr 8</td><td class="mono">2,441</td><td class="mono">213</td><td class="mono">181</td><td class="mono">99</td><td class="mono">104%</td><td><span class="badge badge-fail">NO</span></td><td>Rest</td><td class="left" style="font-size:11px">Wraps+jerky+candy.</td></tr>
+        <tr style="background:var(--ash)"><td colspan="2"><strong>AVERAGE</strong></td><td class="mono"><strong>2,221</strong></td><td class="mono" style="color:var(--fail)"><strong>190</strong></td><td class="mono"><strong>198</strong></td><td class="mono"><strong>81</strong></td><td class="mono"><strong>95%</strong></td><td><strong>1/7</strong></td><td colspan="2"><span class="badge badge-fail">P hit rate: 14%</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot" style="background:var(--info)"></div>Week 3 (Apr 9 – Apr 15) &nbsp;<span class="badge badge-info">IN PROGRESS</span></div>
+    <div class="card-body" style="padding:0;overflow-x:auto">
+      <table>
+        <tr><th class="fire">Day</th><th class="fire">Date</th><th class="fire">Cal</th><th class="fire">P</th><th class="fire">C</th><th class="fire">F</th><th class="fire">Cal%</th><th class="fire">P Hit?</th><th class="fire">Training</th><th class="fire">Notes</th></tr>
+        <tr><td>Thu</td><td>Apr 9</td><td class="mono">2,257</td><td class="mono">216</td><td class="mono">166</td><td class="mono">73</td><td class="mono">96%</td><td><span class="badge badge-fail">NO</span></td><td>Rest</td><td class="left" style="font-size:11px">Burrito+chicken+pita+CP.</td></tr>
+        <tr><td>Fri</td><td>Apr 10</td><td class="mono" style="color:var(--fog)">—</td><td class="mono" style="color:var(--fog)">—</td><td class="mono" style="color:var(--fog)">—</td><td class="mono" style="color:var(--fog)">—</td><td></td><td></td><td></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: TRAINING LOG                      -->
+<!-- ═══════════════════════════════════════ -->
+<div id="training" class="tab">
+  <div class="section-title"><div class="icon">&#127947;</div> Training Log</div>
+
+  <div class="card"><div class="card-header" style="background:var(--coal);color:white">WEEK 1 &mdash; Mar 26 &ndash; Apr 1 &nbsp;&nbsp;(4 sessions, 1 aborted)</div>
+  <div class="card-body">
+    <div class="session">
+      <div class="session-date">FRI Mar 27</div>
+      <div class="session-split">LEGS &mdash; Hamstring Emphasis (Session 1)</div>
+      <table><tr><th class="fire">Exercise</th><th class="fire">Set 1</th><th class="fire">Set 2</th><th class="fire">Set 3</th><th class="fire">Set 4</th><th class="fire">Ecc</th><th class="fire">Working</th><th class="fire">Next</th><th class="fire">Notes</th></tr>
+        <tr><td class="left">Leg Extensions</td><td class="mono">210x20</td><td></td><td></td><td></td><td>NONE</td><td>210</td><td>w/3s ecc</td><td class="left" style="font-size:11px">Wrong order</td></tr>
+        <tr><td class="left">Stiff-Leg DL</td><td class="mono">135x10</td><td class="mono">185x10</td><td class="mono">225x5</td><td class="mono">185x10</td><td>2s</td><td>185</td><td>190</td><td class="left" style="font-size:11px">Set 3 too heavy</td></tr>
+        <tr><td class="left">Seated Leg Curl</td><td class="mono">90x11</td><td class="mono">90x9</td><td class="mono">80x8*</td><td class="mono">70x6*</td><td>3s</td><td>90</td><td>90x12</td><td class="left" style="font-size:11px">*=failure. First eccentrics</td></tr>
+        <tr><td class="left">Single-Leg RDL</td><td class="mono">25x10</td><td class="mono">20x8</td><td></td><td></td><td>2s</td><td>25</td><td>25x10x3</td><td class="left" style="font-size:11px">2/3 sets &mdash; gym closed</td></tr>
+      </table>
+    </div>
+
+    <div class="session">
+      <div class="session-date">SAT Mar 28</div>
+      <div class="session-split">PULL (Session 2) &nbsp;<span class="badge badge-warn">522 cal pre-gym</span></div>
+      <table><tr><th class="fire">Exercise</th><th class="fire">Set 1</th><th class="fire">Set 2</th><th class="fire">Set 3</th><th class="fire">Set 4</th><th class="fire">Ecc</th><th class="fire">Working</th><th class="fire">Next</th><th class="fire">Notes</th></tr>
+        <tr><td class="left">Lat Pulldown</td><td class="mono">115x10</td><td class="mono">115x9+P</td><td class="mono">115x10</td><td class="mono">115x8</td><td>2-3s</td><td>115</td><td>120</td><td class="left" style="font-size:11px">Trained flat</td></tr>
+        <tr><td class="left">CS DB Row</td><td class="mono">30x10</td><td class="mono">30x10</td><td class="mono">30x9.5</td><td class="mono">30x9*</td><td>2-3s</td><td>30</td><td>35</td><td class="left" style="font-size:11px">*=failure</td></tr>
+        <tr><td class="left">SA Cable Row</td><td class="mono">60x5</td><td class="mono">36x12</td><td class="mono">36x12*</td><td></td><td>2-3s</td><td>36</td><td>40</td><td class="left" style="font-size:11px">60 too heavy</td></tr>
+        <tr><td class="left">Reverse Pec Deck</td><td class="mono">40x20</td><td class="mono">55x10</td><td class="mono">40x15+5P</td><td></td><td>2-3s</td><td>40</td><td>45</td><td class="left" style="font-size:11px">55 was ego</td></tr>
+        <tr><td class="left">Incline DB Curl</td><td class="mono">25x11</td><td class="mono">25x5</td><td class="mono">20x7</td><td></td><td>2-3s</td><td>20-25</td><td>25x10</td><td class="left" style="font-size:11px">Pre-fatigued</td></tr>
+        <tr><td class="left">Hammer Curl</td><td class="mono">20x7</td><td class="mono">15x15*</td><td class="mono">15x15*</td><td></td><td>2-3s</td><td>15</td><td>15x12</td><td class="left" style="font-size:11px">*=cheating</td></tr>
+      </table>
+    </div>
+
+    <div class="session">
+      <div class="session-date">MON Mar 30</div>
+      <div class="session-split">UPPER &mdash; Split AM/PM (Session 3)</div>
+      <table><tr><th class="fire">Exercise</th><th class="fire">Set 1</th><th class="fire">Set 2</th><th class="fire">Set 3</th><th class="fire">Set 4</th><th class="fire">Ecc</th><th class="fire">Working</th><th class="fire">Next</th><th class="fire">Notes</th></tr>
+        <tr><td class="left">Incline DB (AM)</td><td class="mono">80x8</td><td class="mono">90x7</td><td class="mono">90x5</td><td class="mono">80x5</td><td>2s</td><td>80</td><td>85</td><td class="left" style="font-size:11px">90 unsustainable</td></tr>
+        <tr><td class="left">BB Row (AM)</td><td class="mono">135x8</td><td class="mono">155x8</td><td class="mono">155x8</td><td class="mono">155x6*</td><td>2s</td><td>155</td><td>155 w/ecc</td><td class="left" style="font-size:11px">*=struggled</td></tr>
+        <tr><td class="left">Pec Deck (AM)</td><td class="mono">205x12</td><td class="mono">205x8+2P</td><td class="mono">175x6*</td><td></td><td>3s</td><td>175-185</td><td>185</td><td class="left" style="font-size:11px">*=failure</td></tr>
+        <tr><td class="left">Lat PD (PM)</td><td class="mono">115x12</td><td class="mono">115x12</td><td class="mono">115x10</td><td></td><td>2-3s</td><td>115</td><td>120</td><td class="left" style="font-size:11px;color:var(--win)"><strong>BURRITO = best PM</strong></td></tr>
+        <tr><td class="left">DB Press 75&deg; (PM)</td><td class="mono">35x12</td><td class="mono">35x12</td><td class="mono">35x12</td><td></td><td>2-3s</td><td>35</td><td>40</td><td class="left" style="font-size:11px">Zero shoulder pain</td></tr>
+        <tr><td class="left">Cable Lat (PM)</td><td class="mono">10x11+P</td><td class="mono">5x15</td><td class="mono">5x11*</td><td></td><td>3s</td><td>5</td><td>7.5</td><td class="left" style="font-size:11px">*=failure</td></tr>
+        <tr><td class="left">EZ/Tri SS (PM)</td><td class="mono">60x12/25x15</td><td class="mono">50x12*/30x12</td><td></td><td></td><td>2-3s</td><td>50-60</td><td>Same</td><td></td></tr>
+        <tr><td class="left">Calf Raise (PM)</td><td class="mono">115x15</td><td class="mono">115x15</td><td class="mono">115x14+P</td><td class="mono">115x15**</td><td>2s</td><td>115</td><td>135</td><td class="left" style="font-size:11px">**=rest-pause</td></tr>
+        <tr><td class="left">Hip Thrust (PM)</td><td class="mono">95x12</td><td class="mono">95x12</td><td class="mono">95x12</td><td></td><td>2s</td><td>95</td><td>115-135</td><td class="left" style="font-size:11px">Too light</td></tr>
+      </table>
+    </div>
+
+    <div class="session">
+      <div class="session-date">TUE Mar 31 &nbsp;<span class="badge badge-fail">ABORTED</span></div>
+      <div class="session-split">LOWER &mdash; Too sore to train</div>
+    </div>
+
+    <div class="session">
+      <div class="session-date">WED Apr 1</div>
+      <div class="session-split">LOWER &mdash; Modified (Session 4)</div>
+      <table><tr><th class="fire">Exercise</th><th class="fire">Set 1</th><th class="fire">Set 2</th><th class="fire">Set 3</th><th class="fire">Set 4</th><th class="fire">Ecc</th><th class="fire">Working</th><th class="fire">Next</th><th class="fire">Notes</th></tr>
+        <tr><td class="left">Hack Squat</td><td class="mono">240x8</td><td class="mono">240x10</td><td class="mono">240x10</td><td class="mono">240x10</td><td>2s</td><td>240</td><td>260</td><td class="left" style="font-size:11px;color:var(--win)">Massive improvement</td></tr>
+        <tr><td class="left">Leg Press</td><td class="mono">370x10</td><td class="mono">370x10</td><td class="mono">370x12</td><td></td><td>1s*</td><td>370</td><td>400</td><td class="left" style="font-size:11px">*Should be 2s</td></tr>
+        <tr><td class="left">Leg Extension</td><td class="mono">210x7</td><td class="mono">170x6</td><td class="mono">120x7</td><td></td><td>2-3s</td><td>100-120</td><td>100x12-15</td><td class="left" style="font-size:11px;color:var(--win)"><strong>ECCENTRICS CLICKED</strong></td></tr>
+        <tr><td class="left">Standing Curl (BF)</td><td class="mono">30x11*</td><td class="mono">10x15</td><td class="mono">10x15</td><td></td><td>2-3s</td><td>10-15</td><td>15x15-20</td><td class="left" style="font-size:11px">*=too heavy for BF</td></tr>
+        <tr><td class="left">Calf Raise</td><td class="mono">135x15</td><td class="mono">135x12</td><td class="mono">135x12**</td><td class="mono">135x12**</td><td>2s</td><td>135</td><td>135x15</td><td class="left" style="font-size:11px">**=rest-pause</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <div class="card"><div class="card-header" style="background:var(--coal);color:white">WEEK 2 &mdash; Apr 2 &ndash; Apr 8 &nbsp;&nbsp;(2 sessions)</div>
+  <div class="card-body">
+    <div class="session">
+      <div class="session-date">THU Apr 2 &nbsp;<span class="badge badge-fail">310 cal pre-gym</span></div>
+      <div class="session-split">PUSH (Session 5)</div>
+      <table><tr><th class="fire">Exercise</th><th class="fire">Set 1</th><th class="fire">Set 2</th><th class="fire">Set 3</th><th class="fire">Set 4</th><th class="fire">Ecc</th><th class="fire">Working</th><th class="fire">Next</th><th class="fire">Notes</th></tr>
+        <tr><td class="left">Flat DB Press</td><td class="mono" style="color:var(--fail)">80x10 &#9888;</td><td class="mono" style="color:var(--fail)">80x7 &#9888;</td><td class="mono" style="color:var(--fail)">75x6 &#9888;</td><td class="mono">75x6</td><td>3s</td><td>75-80</td><td>85 fueled</td><td class="left" style="font-size:11px">All 4 near failure. Ego at 80.</td></tr>
+        <tr><td class="left">Pec Deck</td><td class="mono" style="color:var(--fail)">205x13 &#9888;</td><td class="mono" style="color:var(--win)">175x10 &#10003;</td><td class="mono" style="color:var(--fail)">160x11 &#9888;</td><td></td><td>3s</td><td>175</td><td>185</td><td class="left" style="font-size:11px">Set 2 best of the day</td></tr>
+        <tr><td class="left">Dip Machine</td><td class="mono" style="color:var(--win)">90x12 &#10003;</td><td class="mono" style="color:var(--win)">140x12 &#10003;</td><td class="mono" style="color:var(--win)">180x10 &#10003;</td><td></td><td>3s</td><td>180</td><td>180x12</td><td class="left" style="font-size:11px;color:var(--win)">Ascending &mdash; shake kicked in</td></tr>
+        <tr><td class="left">DB Press 75&deg;</td><td class="mono" style="color:var(--fail)">50x6 &#9888;</td><td class="mono" style="color:var(--win)">40x11 &#10003;</td><td class="mono" style="color:var(--win)">40x9.5 &#10003;</td><td></td><td>3s</td><td>40</td><td>40x12</td><td class="left" style="font-size:11px">Dropped wt = quality up</td></tr>
+        <tr><td class="left">Cable Lat Raise</td><td class="mono">5x15</td><td class="mono">5x15</td><td></td><td></td><td>3s</td><td>5</td><td>7.5</td><td></td></tr>
+        <tr><td class="left">Rev Pec Deck</td><td class="mono">80x12</td><td class="mono" style="color:var(--win)">70x15 &#10003;</td><td></td><td></td><td>2-3s</td><td>70</td><td>70x15-20</td><td class="left" style="font-size:11px">70 = sweet spot</td></tr>
+        <tr><td class="left">OH Tri Ext</td><td class="mono">25x11</td><td class="mono">20x10</td><td></td><td></td><td>3s</td><td>20-25</td><td>25x12</td><td class="left" style="font-size:11px">Emptied tank</td></tr>
+      </table>
+    </div>
+
+    <div class="session">
+      <div class="session-date">SUN Apr 5 &nbsp;<span class="badge badge-win">BEST SESSION</span></div>
+      <div class="session-split">PULL (Session 6)</div>
+      <table><tr><th class="fire">Exercise</th><th class="fire">Set 1</th><th class="fire">Set 2</th><th class="fire">Set 3</th><th class="fire">Ecc</th><th class="fire">Working</th><th class="fire">Next</th><th class="fire">Notes</th></tr>
+        <tr><td class="left">Lat Pulldown</td><td class="mono" style="color:var(--win)">120x12 &#10003;</td><td class="mono" style="color:var(--win)">120x12 &#10003;</td><td class="mono" style="color:var(--win)">120x11 &#10003;</td><td>3s</td><td>120</td><td>125</td><td class="left" style="font-size:11px">All productive. Up from 115.</td></tr>
+        <tr><td class="left">CS DB Row</td><td class="mono" style="color:var(--win)">35x12 &#10003;</td><td class="mono" style="color:var(--win)">35x12 &#10003;</td><td class="mono" style="color:var(--win)">35x12 &#10003;</td><td>2-3s</td><td>35</td><td>40</td><td class="left" style="font-size:11px">Up from 30.</td></tr>
+        <tr><td class="left">SA Cable Row</td><td class="mono" style="color:var(--win)">36x15 &#10003;</td><td class="mono" style="color:var(--win)">36x12 &#10003;</td><td class="mono" style="color:var(--win)">36x12 &#10003;</td><td>3s</td><td>36</td><td>48</td><td class="left" style="font-size:11px">Outgrown 36.</td></tr>
+        <tr><td class="left">Incline DB Curl</td><td class="mono" style="color:var(--win)">25x12 &#10003;</td><td class="mono">25x8*</td><td></td><td>3s</td><td>25</td><td>25x12,12</td><td class="left" style="font-size:11px">*=prescribed failure</td></tr>
+        <tr><td class="left">Hammer Curl</td><td class="mono" style="color:var(--win)">15x15 &#10003;</td><td class="mono">15x15*</td><td></td><td>3s</td><td>15</td><td>20x12</td><td class="left" style="font-size:11px">*=failure. Clean both.</td></tr>
+      </table>
+    </div>
+  </div></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: PROGRESSION                       -->
+<!-- ═══════════════════════════════════════ -->
+<div id="progression" class="tab">
+  <div class="section-title"><div class="icon">&#128200;</div> Exercise Progression</div>
+
+  <div class="card card-fire">
+    <div class="card-header"><div class="dot"></div>Compounds</div>
+    <div class="card-body" style="padding:0;overflow-x:auto">
+      <table>
+        <tr><th class="fire">Exercise</th><th class="fire">Current</th><th class="fire">Best</th><th class="fire">Ecc</th><th class="fire">Muscle</th><th class="fire">Next Target</th></tr>
+        <tr><td class="left">Incline DB Press</td><td class="mono">80 lbs</td><td class="mono">8 reps</td><td>2s</td><td>Chest</td><td class="mono">85 lbs</td></tr>
+        <tr><td class="left">Flat DB Press</td><td class="mono">80 lbs</td><td class="mono">10 reps</td><td>2s</td><td>Chest</td><td class="mono">85 lbs</td></tr>
+        <tr><td class="left">Barbell Row</td><td class="mono">155 lbs</td><td class="mono">8 reps</td><td>2s</td><td>Back</td><td class="mono">155 w/ecc</td></tr>
+        <tr><td class="left">Hack Squat</td><td class="mono">240 lbs</td><td class="mono">10 reps</td><td>2s</td><td>Quads</td><td class="mono">260 lbs</td></tr>
+        <tr><td class="left">Leg Press</td><td class="mono">370 lbs</td><td class="mono">12 reps</td><td>2s</td><td>Quads</td><td class="mono">400 lbs</td></tr>
+        <tr><td class="left">Stiff-Leg DL</td><td class="mono">185 lbs</td><td class="mono">10 reps</td><td>2s</td><td>Hams</td><td class="mono">190 lbs</td></tr>
+        <tr><td class="left">DB Press 75&deg;</td><td class="mono">40 lbs</td><td class="mono">11 reps</td><td>2s</td><td>Shoulders</td><td class="mono">40x12</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>Isolations (with Intensity Techniques)</div>
+    <div class="card-body" style="padding:0;overflow-x:auto">
+      <table>
+        <tr><th class="fire">Exercise</th><th class="fire">Current</th><th class="fire">Best</th><th class="fire">Ecc</th><th class="fire">Technique</th><th class="fire">Muscle</th><th class="fire">Next Target</th></tr>
+        <tr><td class="left">Pec Deck</td><td class="mono">175 lbs</td><td class="mono">10</td><td>3s</td><td><span class="tech">DROP SET</span></td><td>Chest</td><td class="mono">185</td></tr>
+        <tr><td class="left">Dip Machine</td><td class="mono">180 lbs</td><td class="mono">10</td><td>3s</td><td>—</td><td>Chest/Tri</td><td class="mono">180x12</td></tr>
+        <tr><td class="left">Lat Pulldown</td><td class="mono">120 lbs</td><td class="mono">12</td><td>2-3s</td><td>—</td><td>Back</td><td class="mono">125</td></tr>
+        <tr><td class="left">CS DB Row</td><td class="mono">35 lbs</td><td class="mono">12</td><td>2-3s</td><td>—</td><td>Back</td><td class="mono">40</td></tr>
+        <tr><td class="left">SA Cable Row</td><td class="mono">36 lbs</td><td class="mono">15</td><td>2-3s</td><td>—</td><td>Back</td><td class="mono">48</td></tr>
+        <tr><td class="left">Leg Extension</td><td class="mono">100-120</td><td class="mono">7</td><td>3-4s</td><td><span class="tech">LENGTHENED PARTIAL</span></td><td>Quads</td><td class="mono">100x12-15</td></tr>
+        <tr><td class="left">Seated Leg Curl</td><td class="mono">90 lbs</td><td class="mono">11</td><td>3s</td><td><span class="tech">DROP SET</span></td><td>Hams</td><td class="mono">90x12</td></tr>
+        <tr><td class="left">Cable Lat Raise</td><td class="mono">5 lbs</td><td class="mono">15</td><td>3s</td><td><span class="tech">MYO-REPS</span></td><td>Side Delts</td><td class="mono">7.5</td></tr>
+        <tr><td class="left">Rev Pec Deck</td><td class="mono">70 lbs</td><td class="mono">15</td><td>2-3s</td><td><span class="tech">MYO-REPS</span></td><td>Rear Delts</td><td class="mono">70x15-20</td></tr>
+        <tr><td class="left">Incline DB Curl</td><td class="mono">25 lbs</td><td class="mono">12</td><td>3s</td><td><span class="tech">LENGTHENED PARTIAL</span></td><td>Biceps</td><td class="mono">25x12,12</td></tr>
+        <tr><td class="left">Hammer Curl</td><td class="mono">15 lbs</td><td class="mono">15</td><td>3s</td><td>—</td><td>Biceps</td><td class="mono">20x12</td></tr>
+        <tr><td class="left">OH Tri Ext</td><td class="mono">25 lbs</td><td class="mono">11</td><td>3s</td><td><span class="tech">DROP SET</span></td><td>Triceps</td><td class="mono">25x12</td></tr>
+        <tr><td class="left">Tri Pushdown</td><td class="mono">TBD</td><td class="mono">—</td><td>3s</td><td><span class="tech">DROP SET</span></td><td>Triceps</td><td class="mono">TBD</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>Abs (NEW in v2)</div>
+    <div class="card-body" style="padding:0;overflow-x:auto">
+      <table>
+        <tr><th class="fire">Exercise</th><th class="fire">Day</th><th class="fire">Sets x Reps</th><th class="fire">RPE</th><th class="fire">Progression</th></tr>
+        <tr><td class="left">Cable Crunch</td><td>Push (Day 1) + Lower (Day 5)</td><td class="mono">3 x 12-15</td><td>8-9</td><td>Add weight at 15 reps</td></tr>
+        <tr><td class="left">Hanging Knee Raise</td><td>Legs (Day 3)</td><td class="mono">3 x 12-15</td><td>8</td><td>Progress to straight legs</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: CARDIO                            -->
+<!-- ═══════════════════════════════════════ -->
+<div id="cardio" class="tab">
+  <div class="section-title"><div class="icon">&#10084;</div> Cardio Protocol</div>
+  <div class="note" style="margin-bottom:16px">LISS only. Incline treadmill 10-15% grade, 3.0-3.5 mph, HR 120-140 bpm. J-pouch: sip Liquid IV during any session &gt;15 min.</div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric" style="border-left-color:#B8350A"><div class="metric-label">Phase 1 (Wk 1-4)</div><div class="metric-value">~90</div><div class="metric-sub">min/week</div></div>
+    <div class="metric" style="border-left-color:#E8450E"><div class="metric-label">Phase 2 (Wk 5-8)</div><div class="metric-value">~120</div><div class="metric-sub">min/week</div></div>
+    <div class="metric" style="border-left-color:#FF6B35"><div class="metric-label">Phase 3 (Wk 9-12)</div><div class="metric-value">~155</div><div class="metric-sub">min/week</div></div>
+    <div class="metric" style="border-left-color:#FF8F5E"><div class="metric-label">Phase 4 (Wk 13-16)</div><div class="metric-value">~170</div><div class="metric-sub">min/week</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>Cardio Scaling Rules</div>
+    <div class="card-body" style="padding:0;overflow-x:auto">
+      <table>
+        <tr><th class="fire">Phase</th><th class="fire">Training Days</th><th class="fire">Rest Days</th><th class="fire">Weekly Total</th></tr>
+        <tr><td>Phase 1 (Wk 1-4)</td><td>10-15 min post-lift (3 of 5 days)</td><td>25 min walk (2 days)</td><td class="mono">~85-95 min</td></tr>
+        <tr><td>Phase 2 (Wk 5-8)</td><td>15 min post-lift (4 of 5 days)</td><td>30 min walk (2 days)</td><td class="mono">~120 min</td></tr>
+        <tr><td>Phase 3 (Wk 9-12)</td><td>15-20 min post-lift (5 days)</td><td>30-35 min walk (2 days)</td><td class="mono">~145-165 min</td></tr>
+        <tr><td>Phase 4 (Wk 13-16)</td><td>20 min post-lift (5 days)</td><td>35 min walk (2 days)</td><td class="mono">~170 min</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="note">If fat loss stalls 2+ weeks: add 5 min/session BEFORE reducing calories.</div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: COMPLIANCE                        -->
+<!-- ═══════════════════════════════════════ -->
+<div id="compliance" class="tab">
+  <div class="section-title"><div class="icon">&#9745;</div> Weekly Compliance</div>
+  <div class="note" style="margin-bottom:16px">Score YES/NO every Sunday. Target: 85%+ compliance.</div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="check-item"><span class="check-cat cat-train">Train</span> 5 training sessions completed</div>
+      <div class="check-item"><span class="check-cat cat-train">Train</span> 500+ cal pre-workout every session</div>
+      <div class="check-item"><span class="check-cat cat-train">Train</span> No set-1 failures (RPE 7-8 working sets)</div>
+      <div class="check-item"><span class="check-cat cat-train">Train</span> Controlled eccentrics every rep</div>
+      <div class="check-item"><span class="check-cat cat-train">Train</span> Intensity techniques on designated last sets</div>
+      <div class="check-item"><span class="check-cat cat-train">Train</span> Abs trained 3x this week</div>
+      <div class="check-item"><span class="check-cat cat-train">Train</span> Shoulder warm-up before push/upper</div>
+      <div class="check-item"><span class="check-cat cat-cardio">Cardio</span> Post-workout cardio on training days</div>
+      <div class="check-item"><span class="check-cat cat-cardio">Cardio</span> Rest day LISS completed (25-35 min)</div>
+      <div class="check-item"><span class="check-cat cat-cardio">Cardio</span> Liquid IV during cardio &gt;15 min</div>
+      <div class="check-item"><span class="check-cat cat-nutr">Nutr</span> Protein 228g+ every day (0 misses)</div>
+      <div class="check-item"><span class="check-cat cat-nutr">Nutr</span> Calories 2,200-2,500 range daily</div>
+      <div class="check-item"><span class="check-cat cat-nutr">Nutr</span> Ate before Adderall every morning</div>
+      <div class="check-item"><span class="check-cat cat-nutr">Nutr</span> 5-6 meals/day (no 80g+ P dumps)</div>
+      <div class="check-item"><span class="check-cat cat-nutr">Nutr</span> Refeed was planned &amp; carb-focused</div>
+      <div class="check-item"><span class="check-cat cat-nutr">Nutr</span> No unplanned fast food binges</div>
+      <div class="check-item"><span class="check-cat cat-supps">Supps</span> Full supp stack taken daily</div>
+      <div class="check-item"><span class="check-cat cat-supps">Supps</span> Magnesium before bed</div>
+      <div class="check-item"><span class="check-cat cat-supps">Supps</span> 2-3 Liquid IVs throughout day</div>
+      <div class="check-item"><span class="check-cat cat-recov">Recov</span> 7+ hours sleep/night (avg)</div>
+      <div class="check-item"><span class="check-cat cat-recov">Recov</span> Consistent bed/wake time</div>
+      <div class="check-item"><span class="check-cat cat-recov">Recov</span> Rest day walking (20-30 min)</div>
+      <div class="check-item"><span class="check-cat cat-recov">Recov</span> Hydration on point (pale yellow urine)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: BODY STATS                        -->
+<!-- ═══════════════════════════════════════ -->
+<div id="weight" class="tab">
+  <div class="section-title"><div class="icon">&#9878;</div> Body Stats</div>
+  <div class="note" style="margin-bottom:16px">Weigh daily naked AM. 7-day average is the signal. Single days = noise.</div>
+
+  <div class="grid-3" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Starting</div><div class="metric-value">190.0</div><div class="metric-sub">Mar 26, 2026</div></div>
+    <div class="metric"><div class="metric-label">Target</div><div class="metric-value">175.0</div><div class="metric-sub">15 lbs to lose</div></div>
+    <div class="metric"><div class="metric-label">Expected Rate</div><div class="metric-value">0.75-1</div><div class="metric-sub">lb/week</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>Weekly Weigh-In Log</div>
+    <div class="card-body" style="padding:0;overflow-x:auto">
+      <table>
+        <tr><th class="fire">Week</th><th class="fire">7-Day Avg</th><th class="fire">Change</th><th class="fire">Total Lost</th><th class="fire">Rate</th><th class="fire">Notes</th></tr>
+        <tr style="background:var(--ash)"><td><strong>Baseline</strong></td><td class="mono"><strong>190.0</strong></td><td>—</td><td>—</td><td>—</td><td></td></tr>
+        <tr><td>Week 1</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td></td></tr>
+        <tr><td>Week 2</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td></td></tr>
+        <tr><td>Week 3</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td><span class="badge badge-info">CURRENT</span></td></tr>
+        <tr><td>Week 4</td><td class="mono">—</td><td></td><td></td><td></td><td><span class="badge badge-warn">DELOAD</span></td></tr>
+        <tr><td>Week 7</td><td class="mono">—</td><td></td><td></td><td></td><td><span class="badge badge-info">DIET BREAK START</span></td></tr>
+        <tr><td>Week 8</td><td class="mono">—</td><td></td><td></td><td></td><td><span class="badge badge-warn">DELOAD</span></td></tr>
+        <tr><td>Week 12</td><td class="mono">—</td><td></td><td></td><td></td><td><span class="badge badge-warn">DELOAD</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>BF% Visibility Guide</div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <tr><th class="fire">Body Fat</th><th class="fire">Abs Visibility</th><th class="fire">Est. Weight</th></tr>
+        <tr><td>18-22%</td><td>Not visible</td><td class="mono">190 (current)</td></tr>
+        <tr><td>15-17%</td><td>Faint upper abs in good lighting</td><td class="mono">183-186</td></tr>
+        <tr><td>13-14%</td><td>Clear 4-pack, faint lower</td><td class="mono">178-181</td></tr>
+        <tr><td style="color:var(--fire);font-weight:700">11-12%</td><td style="color:var(--fire);font-weight:700">Full 6-pack visible</td><td class="mono" style="color:var(--fire);font-weight:700">173-177</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: REFEEDS                           -->
+<!-- ═══════════════════════════════════════ -->
+<div id="refeed" class="tab">
+  <div class="section-title"><div class="icon">&#127789;</div> Refeed & Diet Breaks</div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Refeed Calories</div><div class="metric-value">2,850</div><div class="metric-sub">Maintenance &mdash; extra 500 ALL from carbs</div></div>
+    <div class="metric"><div class="metric-label">Refeed Carbs</div><div class="metric-value">293g</div><div class="metric-sub">+125g over cut target (168g)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>Refeed Rules</div>
+    <div class="card-body">
+      <div style="font-size:13px; line-height:2">
+        <strong>1.</strong> Extra 500 cal comes ENTIRELY from carbs. Protein and fat unchanged.<br>
+        <strong>2.</strong> Place on hardest training day (Legs recommended).<br>
+        <strong>3.</strong> Sources: rice, potatoes, oats, pancakes, fruit, bagels.<br>
+        <strong>4.</strong> NOT: Taco Bell, Chick-fil-A, Buncha Crunch, fried food.<br>
+        <strong>5.</strong> A refeed is strategic. A binge is emotional. Know the difference.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>Diet Break Schedule</div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <tr><th class="fire">When</th><th class="fire">Duration</th><th class="fire">Calories</th><th class="fire">Purpose</th></tr>
+        <tr><td>Weeks 7-8</td><td>10-14 days</td><td class="mono">2,850 (maintenance)</td><td class="left">Metabolic recovery, leptin restoration, psychological reset</td></tr>
+        <tr><td>Week 14</td><td>7 days</td><td class="mono">2,850 (maintenance)</td><td class="left">Final push recovery (if needed)</td></tr>
+      </table>
+      <div class="note">You may gain 2-4 lbs water/glycogen during a diet break. This is NOT fat. It drops within a week of resuming the cut.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TAB: REFERENCE                         -->
+<!-- ═══════════════════════════════════════ -->
+<div id="reference" class="tab">
+  <div class="section-title"><div class="icon">&#128218;</div> Quick Reference</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="dot"></div>RPE Guide</div>
+      <div class="card-body" style="padding:0">
+        <table>
+          <tr><th class="fire">RPE</th><th class="fire">Meaning</th><th class="fire">When to Use</th></tr>
+          <tr><td class="mono">7</td><td>3 reps left</td><td>Warm-up / early sets</td></tr>
+          <tr><td class="mono" style="color:var(--fire);font-weight:700">8</td><td style="color:var(--fire);font-weight:700">2 reps left</td><td style="color:var(--fire);font-weight:700">DEFAULT WORKING</td></tr>
+          <tr><td class="mono">9</td><td>1 rep left</td><td>Last set of isolations only</td></tr>
+          <tr><td class="mono">10</td><td>Failure</td><td>NEVER compounds</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot"></div>Intensity Techniques</div>
+      <div class="card-body" style="padding:0">
+        <table>
+          <tr><th class="fire">Technique</th><th class="fire">How</th><th class="fire">Rule</th></tr>
+          <tr><td class="left"><span class="tech">DROP SET</span></td><td class="left" style="font-size:12px">Fail &rarr; strip 30-40% &rarr; rep to RPE 9</td><td class="left" style="font-size:12px">One drop only</td></tr>
+          <tr><td class="left"><span class="tech">MYO-REPS</span></td><td class="left" style="font-size:12px">RPE 9 &rarr; 15s rest &rarr; 3-5 rep mini-sets</td><td class="left" style="font-size:12px">Stop at &lt;3 reps</td></tr>
+          <tr><td class="left"><span class="tech">LENGTHENED PARTIAL</span></td><td class="left" style="font-size:12px">After fail, 6-10 in bottom 1/3 ROM</td><td class="left" style="font-size:12px">Stretch position</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot"></div>Daily Macros</div>
+      <div class="card-body" style="padding:0">
+        <table>
+          <tr><th class="fire">Macro</th><th class="fire">Cut Day</th><th class="fire">Refeed Day</th></tr>
+          <tr><td class="left">Calories</td><td class="mono">2,350</td><td class="mono">2,850</td></tr>
+          <tr><td class="left">Protein</td><td class="mono">228g</td><td class="mono">228g</td></tr>
+          <tr><td class="left">Carbs</td><td class="mono">168g</td><td class="mono">293g</td></tr>
+          <tr><td class="left">Fat</td><td class="mono">85g</td><td class="mono">85g</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="dot"></div>Supplement Timing</div>
+      <div class="card-body" style="padding:0">
+        <table>
+          <tr><th class="fire">Supplement</th><th class="fire">Dose</th><th class="fire">When</th></tr>
+          <tr><td class="left">Creatine</td><td class="mono">5g</td><td>AM breakfast</td></tr>
+          <tr><td class="left">10X Health Multi</td><td class="mono">3 caps</td><td>AM breakfast</td></tr>
+          <tr><td class="left">Fish Oil</td><td class="mono">2 softgels</td><td>AM breakfast</td></tr>
+          <tr><td class="left">Clomiphene</td><td class="mono">50mg</td><td>AM with food</td></tr>
+          <tr><td class="left">Boron</td><td class="mono">6-10mg</td><td>AM</td></tr>
+          <tr><td class="left">Magnesium</td><td class="mono">400mg</td><td>Before bed</td></tr>
+          <tr><td class="left">Liquid IV (SF)</td><td class="mono">2-3/day</td><td>AM + training + PM</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="dot"></div>Action Items &nbsp;<span class="badge badge-done">ALL COMPLETED Apr 10</span></div>
+    <div class="card-body" style="padding:0">
+      <table>
+        <tr><th class="fire">Priority</th><th class="fire">Action</th><th class="fire">Status</th></tr>
+        <tr><td><span class="badge badge-done">DONE</span></td><td class="left">Call GI Doctor &mdash; pouchitis treatment</td><td class="mono">Apr 10</td></tr>
+        <tr><td><span class="badge badge-done">DONE</span></td><td class="left">Flag DIM 50mg to Clomid prescriber</td><td class="mono">Apr 10</td></tr>
+        <tr><td><span class="badge badge-done">DONE</span></td><td class="left">Verify standalone D3 dose</td><td class="mono">Apr 10</td></tr>
+        <tr><td><span class="badge badge-done">DONE</span></td><td class="left">Buy standalone Boron 6-10mg</td><td class="mono">Apr 10</td></tr>
+        <tr><td><span class="badge badge-done">DONE</span></td><td class="left">Discuss Clomid 50mg vs 25mg</td><td class="mono">Apr 10</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /appContent -->
+
+<script>
+// ─── PIN LOCK ───
+const PIN_KEY = 'maxpower_pin_hash';
+
+function pinNext(n) {
+  const val = document.getElementById('pin' + n).value;
+  if (val && n < 4) document.getElementById('pin' + (n + 1)).focus();
+  if (n === 4 && val) checkPin();
+}
+
+function simpleHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h) + str.charCodeAt(i);
+    h |= 0;
+  }
+  return String(h);
+}
+
+function checkPin() {
+  const pin = [1,2,3,4].map(i => document.getElementById('pin' + i).value).join('');
+  if (pin.length < 4) return;
+
+  const stored = localStorage.getItem(PIN_KEY);
+
+  if (!stored) {
+    // First time — set the PIN
+    localStorage.setItem(PIN_KEY, simpleHash(pin));
+    unlock();
+  } else if (simpleHash(pin) === stored) {
+    unlock();
+  } else {
+    document.getElementById('pinError').textContent = 'Wrong PIN';
+    [1,2,3,4].forEach(i => { document.getElementById('pin' + i).value = ''; });
+    document.getElementById('pin1').focus();
+    setTimeout(() => { document.getElementById('pinError').textContent = ''; }, 2000);
+  }
+}
+
+function unlock() {
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'block';
+}
+
+// Check if already unlocked this session
+(function initLock() {
+  const stored = localStorage.getItem(PIN_KEY);
+  const session = sessionStorage.getItem('maxpower_unlocked');
+  if (session === 'true') {
+    unlock();
+  } else {
+    document.getElementById('lockScreen').style.display = 'flex';
+    document.getElementById('appContent').style.display = 'none';
+  }
+})();
+
+function unlock() {
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'block';
+  sessionStorage.setItem('maxpower_unlocked', 'true');
+}
+
+// ─── SUPABASE CONFIG ───
+const SUPABASE_URL = 'https://hkduuevzwtabiemlizuh.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhrZHV1ZXZ6d3RhYmllbWxpenVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODQ4MTYsImV4cCI6MjA4MDQ2MDgxNn0.xSJ0tsR0pfVAozEqA4UvkfO9PrmUQ3bJsJIS4aZbz9s';
+
+async function sbFetch(path, opts = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...opts,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': opts.method === 'POST' ? 'resolution=merge-duplicates' : 'return=representation',
+      ...opts.headers
+    }
+  });
+  if (!res.ok) return null;
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+// ─── TAB NAVIGATION ───
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─── DAILY CHECKLIST (Supabase + localStorage fallback) ───
+let currentDate = new Date();
+const STORAGE_PREFIX = 'maxpower_daily_';
+let syncIndicator = null;
+
+function dateKey(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function formatDate(d) {
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+}
+
+// Local storage (fast, immediate)
+function getLocalItems(d) {
+  const data = localStorage.getItem(STORAGE_PREFIX + dateKey(d));
+  return data ? JSON.parse(data) : {};
+}
+function saveLocalItems(d, items) {
+  localStorage.setItem(STORAGE_PREFIX + dateKey(d), JSON.stringify(items));
+}
+
+// Supabase (sync, async)
+async function getRemoteItems(d) {
+  try {
+    const data = await sbFetch(`daily_checklist?date=eq.${dateKey(d)}&select=items`);
+    if (data && data.length > 0) return data[0].items;
+  } catch (e) {}
+  return null;
+}
+
+async function saveRemoteItems(d, items) {
+  try {
+    showSync('saving');
+    await sbFetch('daily_checklist', {
+      method: 'POST',
+      headers: { 'Prefer': 'resolution=merge-duplicates' },
+      body: JSON.stringify({
+        date: dateKey(d),
+        items: items,
+        checked_count: Object.keys(items).length,
+        updated_at: new Date().toISOString()
+      })
+    });
+    showSync('saved');
+  } catch (e) {
+    showSync('offline');
+  }
+}
+
+function showSync(state) {
+  if (!syncIndicator) {
+    syncIndicator = document.getElementById('syncStatus');
+  }
+  if (!syncIndicator) return;
+  const labels = {
+    saving: ['Syncing...', 'var(--warn)'],
+    saved: ['Synced', 'var(--win)'],
+    offline: ['Offline (saved locally)', 'var(--fog)'],
+    loading: ['Loading...', 'var(--info)']
+  };
+  const [text, color] = labels[state] || ['', 'var(--fog)'];
+  syncIndicator.textContent = text;
+  syncIndicator.style.color = color;
+  if (state === 'saved') {
+    setTimeout(() => { if (syncIndicator.textContent === 'Synced') syncIndicator.textContent = ''; }, 2000);
+  }
+}
+
+async function toggleItem(el) {
+  const id = el.dataset.id;
+  const items = getLocalItems(currentDate);
+
+  if (items[id]) {
+    delete items[id];
+    el.classList.remove('checked');
+  } else {
+    items[id] = Date.now();
+    el.classList.add('checked');
+  }
+
+  // Save locally first (instant)
+  saveLocalItems(currentDate, items);
+  updateScore();
+
+  // Then sync to Supabase (async)
+  await saveRemoteItems(currentDate, items);
+  updateStreak();
+}
+
+async function renderDay() {
+  document.getElementById('currentDateLabel').textContent = formatDate(currentDate);
+
+  // Show local data immediately
+  let items = getLocalItems(currentDate);
+
+  // Try to get remote data (may be newer from another device)
+  showSync('loading');
+  const remoteItems = await getRemoteItems(currentDate);
+
+  if (remoteItems) {
+    // Merge: remote wins if it has more items or is different
+    const localCount = Object.keys(items).length;
+    const remoteCount = Object.keys(remoteItems).length;
+
+    if (remoteCount > localCount || (remoteCount > 0 && localCount === 0)) {
+      items = remoteItems;
+      saveLocalItems(currentDate, items);
+    } else if (localCount > remoteCount) {
+      // Local is ahead — push to remote
+      await saveRemoteItems(currentDate, items);
+    }
+    showSync('saved');
+  } else if (Object.keys(items).length > 0) {
+    // No remote data but we have local — push it up
+    await saveRemoteItems(currentDate, items);
+  } else {
+    showSync('');
+    if (syncIndicator) syncIndicator.textContent = '';
+  }
+
+  // Render checkmarks
+  document.querySelectorAll('.daily-item').forEach(el => {
+    if (items[el.dataset.id]) {
+      el.classList.add('checked');
+    } else {
+      el.classList.remove('checked');
+    }
+  });
+
+  updateScore();
+  updateStreak();
+
+  const isToday = dateKey(currentDate) === dateKey(new Date());
+  document.getElementById('currentDateLabel').style.color = isToday ? 'var(--fire)' : 'var(--coal)';
+}
+
+function updateScore() {
+  const total = document.querySelectorAll('.daily-item').length;
+  const checked = document.querySelectorAll('.daily-item.checked').length;
+  const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+
+  const ring = document.getElementById('scoreRing');
+  ring.textContent = pct + '%';
+
+  if (pct >= 80) {
+    ring.style.background = 'var(--win)';
+    document.getElementById('scoreLabel').textContent = 'Crushing it.';
+  } else if (pct >= 50) {
+    ring.style.background = 'var(--grad)';
+    document.getElementById('scoreLabel').textContent = 'Keep going.';
+  } else if (pct > 0) {
+    ring.style.background = 'var(--warn)';
+    document.getElementById('scoreLabel').textContent = 'Just getting started.';
+  } else {
+    ring.style.background = 'var(--mist)';
+    document.getElementById('scoreLabel').textContent = 'Start checking off tasks';
+  }
+
+  document.getElementById('scoreDetail').textContent = `${checked} of ${total} tasks completed`;
+}
+
+async function updateStreak() {
+  let count = 0;
+  const total = document.querySelectorAll('.daily-item').length;
+  const today = new Date();
+
+  // Check today first
+  const todayItems = getLocalItems(today);
+  if (Object.keys(todayItems).length / total >= 0.8) count++;
+
+  // Count backwards from yesterday
+  const d = new Date(today);
+  d.setDate(d.getDate() - 1);
+
+  for (let i = 0; i < 60; i++) {
+    const items = getLocalItems(d);
+    if (Object.keys(items).length / total >= 0.8) {
+      count++;
+      d.setDate(d.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  document.getElementById('streakCount').textContent = count;
+}
+
+function changeDay(delta) {
+  currentDate.setDate(currentDate.getDate() + delta);
+  renderDay();
+}
+
+function goToday() {
+  currentDate = new Date();
+  renderDay();
+}
+
+// ─── SERVICE WORKER ───
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', renderDay);
+</script>
+</body>
+</html>
