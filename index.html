@@ -10,6 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Physique">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/jpeg" href="favicon.jpeg">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <meta name="mobile-web-app-capable" content="yes">
 <style>
@@ -1469,8 +1470,53 @@ function checkPin() {
   else if(simpleHash(pin)===stored){unlock();}
   else{document.getElementById('pinError').textContent='Wrong PIN';[1,2,3,4].forEach(i=>{document.getElementById('pin'+i).value='';});document.getElementById('pin1').focus();setTimeout(()=>{document.getElementById('pinError').textContent='';},2000);}
 }
-function unlock(){document.getElementById('lockScreen').style.display='none';document.getElementById('app').style.display='block';document.getElementById('bottomNav').style.display='flex';sessionStorage.setItem('mp_unlock','1');}
+function unlock(){document.getElementById('lockScreen').style.display='none';document.getElementById('app').style.display='block';document.getElementById('bottomNav').style.display='flex';sessionStorage.setItem('mp_unlock','1');syncRecentData();}
 (function(){if(sessionStorage.getItem('mp_unlock')==='1'){unlock();}else{document.getElementById('lockScreen').style.display='flex';document.getElementById('app').style.display='none';}})();
+
+// ═══════ SYNC RECENT DATA FROM SUPABASE ═══════
+async function syncRecentData() {
+  try {
+    // Fetch last 45 days of daily checklist data from Supabase
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 45);
+    const cutoffStr = cutoff.getFullYear() + '-' + String(cutoff.getMonth()+1).padStart(2,'0') + '-' + String(cutoff.getDate()).padStart(2,'0');
+    const rows = await sb(`daily_checklist?date=gte.${cutoffStr}&select=date,items&order=date.asc`);
+    if (rows && rows.length) {
+      let synced = 0;
+      rows.forEach(row => {
+        if (row.items && Object.keys(row.items).length > 0) {
+          const localKey = 'mp_daily_' + row.date;
+          const local = localStorage.getItem(localKey);
+          const localCount = local ? Object.keys(JSON.parse(local)).length : 0;
+          const remoteCount = Object.keys(row.items).length;
+          // Take whichever has more data (more items checked)
+          if (remoteCount > localCount) {
+            localStorage.setItem(localKey, JSON.stringify(row.items));
+            synced++;
+          }
+        }
+      });
+      if (synced > 0) console.log('[Sync] Pulled ' + synced + ' days from Supabase');
+    }
+    // Also fetch compliance data
+    const compRows = await sb(`compliance_data?select=week,data&order=week.desc&limit=10`);
+    if (compRows && compRows.length) {
+      compRows.forEach(row => {
+        if (row.data && Object.keys(row.data).length > 0) {
+          const localKey = 'mp_compliance_' + row.week;
+          const local = localStorage.getItem(localKey);
+          const localCount = local ? Object.keys(JSON.parse(local)).length : 0;
+          const remoteCount = Object.keys(row.data).length;
+          if (remoteCount > localCount) {
+            localStorage.setItem(localKey, JSON.stringify(row.data));
+          }
+        }
+      });
+    }
+  } catch(e) { console.log('[Sync] Error:', e); }
+  // Refresh UI after sync
+  setTimeout(() => { updateKPIDashboard(); renderCompliance(); }, 300);
+}
 
 // ═══════ DAILY CHECKLIST ═══════
 let curDate = new Date();

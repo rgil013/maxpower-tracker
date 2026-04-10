@@ -1,7 +1,8 @@
-const CACHE_NAME = 'maxpower-v3';
+const CACHE_NAME = 'maxpower-v4';
 const ASSETS = [
   './',
   './index.html',
+  './favicon.jpeg',
   './icon-192.png',
   './icon-512.png',
   './manifest.json'
