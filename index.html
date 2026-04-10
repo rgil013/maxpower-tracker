@@ -10,6 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Physique">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <meta name="mobile-web-app-capable" content="yes">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -648,6 +649,7 @@ tr:last-child td { border-bottom: none; }
   <button class="active" onclick="go('daily')">Daily</button>
   <button onclick="go('logger')">Log Workout</button>
   <button onclick="go('coach')">AI Coach</button>
+  <button onclick="go('progress')">Progress</button>
   <button onclick="go('dash')">Dashboard</button>
   <button onclick="go('nutrition')">Nutrition</button>
   <button onclick="go('training')">Training Log</button>
@@ -813,6 +815,31 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
+<!-- ═══════ PROGRESS ═══════ -->
+<div id="progress" class="tab">
+  <div class="section-head">Progress</div>
+
+  <div class="card">
+    <div class="card-head">Daily Calories vs Target</div>
+    <div class="card-body" style="padding:12px;"><canvas id="chartCal" height="220"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Daily Protein vs 228g Target</div>
+    <div class="card-body" style="padding:12px;"><canvas id="chartPro" height="220"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Key Lifts — Week 1 vs Week 2</div>
+    <div class="card-body" style="padding:12px;"><canvas id="chartLifts" height="260"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Weekly Sessions</div>
+    <div class="card-body" style="padding:12px;"><canvas id="chartSessions" height="160"></canvas></div>
+  </div>
+</div>
+
 <!-- ═══════ DASHBOARD ═══════ -->
 <div id="dash" class="tab">
   <div class="section-head">Dashboard</div>
@@ -873,6 +900,7 @@ tr:last-child td { border-bottom: none; }
 <div id="more" class="tab">
   <div class="section-head">More</div>
   <div class="more-grid">
+    <div class="more-item" onclick="go('progress')"><div class="more-icon">&#128200;</div><div class="more-label">Progress</div></div>
     <div class="more-item" onclick="go('nutrition')"><div class="more-icon">&#127860;</div><div class="more-label">Nutrition</div></div>
     <div class="more-item" onclick="go('training')"><div class="more-icon">&#128221;</div><div class="more-label">Training Log</div></div>
     <div class="more-item" onclick="go('progression')"><div class="more-icon">&#128200;</div><div class="more-label">Progression</div></div>
@@ -886,7 +914,69 @@ tr:last-child td { border-bottom: none; }
 <!-- ═══════ PLACEHOLDER TABS ═══════ -->
 <div id="nutrition" class="tab"><div class="section-head">Nutrition</div><div class="card"><div class="card-head">Week 1 <span class="pill pill-green">238g avg P</span></div><div class="card-body flush" style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table><tr><th>Day</th><th>Cal</th><th>P</th><th>F</th><th>P Hit?</th></tr><tr><td>Thu 3/26</td><td class="mono">2,340</td><td class="mono">248</td><td class="mono">65</td><td class="center"><span class="pill pill-green">YES</span></td></tr><tr><td>Fri 3/27</td><td class="mono" style="color:var(--red)">3,322</td><td class="mono">217</td><td class="mono" style="color:var(--red)">140</td><td class="center"><span class="pill pill-red">NO</span></td></tr><tr><td>Sat 3/28</td><td class="mono">2,200</td><td class="mono" style="color:var(--green)">257</td><td class="mono">60</td><td class="center"><span class="pill pill-green">YES</span></td></tr><tr><td>Sun 3/29</td><td class="mono">2,266</td><td class="mono">234</td><td class="mono">89</td><td class="center"><span class="pill pill-green">YES</span></td></tr><tr><td>Mon 3/30</td><td class="mono">2,330</td><td class="mono">241</td><td class="mono">82</td><td class="center"><span class="pill pill-green">YES</span></td></tr><tr><td>Tue 3/31</td><td class="mono">2,327</td><td class="mono">232</td><td class="mono">84</td><td class="center"><span class="pill pill-green">YES</span></td></tr><tr><td>Wed 4/1</td><td class="mono">2,188</td><td class="mono">239</td><td class="mono">84</td><td class="center"><span class="pill pill-green">YES</span></td></tr></table></div></div><div class="card"><div class="card-head">Week 2 <span class="pill pill-red">190g avg P</span></div><div class="card-body flush" style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table><tr><th>Day</th><th>Cal</th><th>P</th><th>F</th><th>P Hit?</th></tr><tr><td>Thu 4/2</td><td class="mono" style="color:var(--red)">1,756</td><td class="mono" style="color:var(--red)">126</td><td class="mono" style="color:var(--red)">22</td><td class="center"><span class="pill pill-red">NO</span></td></tr><tr><td>Fri 4/3</td><td class="mono" style="color:var(--red)">1,680</td><td class="mono" style="color:var(--red)">123</td><td class="mono">90</td><td class="center"><span class="pill pill-red">NO</span></td></tr><tr><td>Sat 4/4</td><td class="mono">2,180</td><td class="mono">217</td><td class="mono">72</td><td class="center"><span class="pill pill-red">NO</span></td></tr><tr><td style="color:var(--green);font-weight:600">Sun 4/5</td><td class="mono" style="color:var(--green)">2,436</td><td class="mono" style="color:var(--green)">235</td><td class="mono">90</td><td class="center"><span class="pill pill-green">YES</span></td></tr><tr><td>Mon 4/6</td><td class="mono">2,231</td><td class="mono">209</td><td class="mono">69</td><td class="center"><span class="pill pill-red">NO</span></td></tr><tr><td>Tue 4/7</td><td class="mono" style="color:var(--red)">2,824</td><td class="mono">205</td><td class="mono" style="color:var(--red)">128</td><td class="center"><span class="pill pill-red">NO</span></td></tr><tr><td>Wed 4/8</td><td class="mono">2,441</td><td class="mono">213</td><td class="mono">99</td><td class="center"><span class="pill pill-red">NO</span></td></tr></table></div></div></div>
 
-<div id="training" class="tab"><div class="section-head">Training Log</div><div class="card"><div class="card-head">Session 6 — Pull (Apr 5) <span class="pill pill-green">BEST</span></div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>S1</th><th>S2</th><th>S3</th></tr><tr><td>Lat Pulldown</td><td class="mono" style="color:var(--green)">120x12</td><td class="mono" style="color:var(--green)">120x12</td><td class="mono" style="color:var(--green)">120x11</td></tr><tr><td>CS DB Row</td><td class="mono" style="color:var(--green)">35x12</td><td class="mono" style="color:var(--green)">35x12</td><td class="mono" style="color:var(--green)">35x12</td></tr><tr><td>SA Cable Row</td><td class="mono" style="color:var(--green)">36x15</td><td class="mono" style="color:var(--green)">36x12</td><td class="mono" style="color:var(--green)">36x12</td></tr><tr><td>Incline Curl</td><td class="mono" style="color:var(--green)">25x12</td><td class="mono">25x8*</td><td></td></tr><tr><td>Hammer Curl</td><td class="mono" style="color:var(--green)">15x15</td><td class="mono">15x15*</td><td></td></tr></table></div></div><div class="card"><div class="card-head">Session 5 — Push (Apr 2) <span class="pill pill-red">310 cal</span></div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>S1</th><th>S2</th><th>S3</th></tr><tr><td>Flat DB</td><td class="mono" style="color:var(--red)">80x10</td><td class="mono" style="color:var(--red)">80x7</td><td class="mono" style="color:var(--red)">75x6</td></tr><tr><td>Pec Deck</td><td class="mono" style="color:var(--red)">205x13</td><td class="mono" style="color:var(--green)">175x10</td><td class="mono" style="color:var(--red)">160x11</td></tr><tr><td>Dip Machine</td><td class="mono" style="color:var(--green)">90x12</td><td class="mono" style="color:var(--green)">140x12</td><td class="mono" style="color:var(--green)">180x10</td></tr></table></div></div></div>
+<div id="training" class="tab"><div class="section-head">Training Log</div>
+
+<div style="font-size:13px;font-weight:700;color:var(--text3);margin:12px 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Week 2 — Apr 2-8</div>
+
+<div class="card"><div class="card-head">Session 6 — Pull (Apr 5) <span class="pill pill-green">BEST SESSION</span></div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>S1</th><th>S2</th><th>S3</th><th>Ecc</th><th>Next</th></tr>
+<tr><td>Lat Pulldown</td><td class="mono" style="color:var(--green)">120x12</td><td class="mono" style="color:var(--green)">120x12</td><td class="mono" style="color:var(--green)">120x11</td><td>3s</td><td class="mono">125</td></tr>
+<tr><td>CS DB Row</td><td class="mono" style="color:var(--green)">35x12</td><td class="mono" style="color:var(--green)">35x12</td><td class="mono" style="color:var(--green)">35x12</td><td>2-3s</td><td class="mono">40</td></tr>
+<tr><td>SA Cable Row</td><td class="mono" style="color:var(--green)">36x15</td><td class="mono" style="color:var(--green)">36x12</td><td class="mono" style="color:var(--green)">36x12</td><td>3s</td><td class="mono">48</td></tr>
+<tr><td>Incline DB Curl</td><td class="mono" style="color:var(--green)">25x12</td><td class="mono">25x8*</td><td></td><td>3s</td><td class="mono">25x12,12</td></tr>
+<tr><td>Hammer Curl</td><td class="mono" style="color:var(--green)">15x15</td><td class="mono">15x15*</td><td></td><td>3s</td><td class="mono">20x12</td></tr>
+</table></div></div>
+
+<div class="card"><div class="card-head">Session 5 — Push (Apr 2) <span class="pill pill-red">310 cal pre</span></div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>Ecc</th><th>Next</th></tr>
+<tr><td>Flat DB Press</td><td class="mono" style="color:var(--red)">80x10</td><td class="mono" style="color:var(--red)">80x7</td><td class="mono" style="color:var(--red)">75x6</td><td class="mono">75x6</td><td>3s</td><td class="mono">85 fueled</td></tr>
+<tr><td>Pec Deck</td><td class="mono" style="color:var(--red)">205x13</td><td class="mono" style="color:var(--green)">175x10</td><td class="mono" style="color:var(--red)">160x11</td><td></td><td>3s</td><td class="mono">185</td></tr>
+<tr><td>Dip Machine</td><td class="mono" style="color:var(--green)">90x12</td><td class="mono" style="color:var(--green)">140x12</td><td class="mono" style="color:var(--green)">180x10</td><td></td><td>3s</td><td class="mono">180x12</td></tr>
+<tr><td>DB Press 75&deg;</td><td class="mono" style="color:var(--red)">50x6</td><td class="mono" style="color:var(--green)">40x11</td><td class="mono" style="color:var(--green)">40x9.5</td><td></td><td>3s</td><td class="mono">40x12</td></tr>
+<tr><td>Cable Lat Raise</td><td class="mono">5x15</td><td class="mono">5x15</td><td></td><td></td><td>3s</td><td class="mono">7.5</td></tr>
+<tr><td>Rev Pec Deck</td><td class="mono">80x12</td><td class="mono" style="color:var(--green)">70x15</td><td></td><td></td><td>2-3s</td><td class="mono">70x15-20</td></tr>
+<tr><td>OH Tri Ext</td><td class="mono">25x11</td><td class="mono">20x10</td><td></td><td></td><td>3s</td><td class="mono">25x12</td></tr>
+</table></div></div>
+
+<div style="font-size:13px;font-weight:700;color:var(--text3);margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Week 1 — Mar 26-Apr 1</div>
+
+<div class="card"><div class="card-head">Session 4 — Lower (Apr 1) <span class="pill pill-green">Modified</span></div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>Ecc</th><th>Next</th></tr>
+<tr><td>Hack Squat</td><td class="mono">240x8</td><td class="mono">240x10</td><td class="mono">240x10</td><td class="mono">240x10</td><td>2s</td><td class="mono">260</td></tr>
+<tr><td>Leg Press</td><td class="mono">370x10</td><td class="mono">370x10</td><td class="mono">370x12</td><td></td><td>1s*</td><td class="mono">400</td></tr>
+<tr><td>Leg Extension</td><td class="mono">210x7</td><td class="mono">170x6</td><td class="mono">120x7</td><td></td><td>2-3s</td><td class="mono">100x12-15</td></tr>
+<tr><td>Standing Curl BF</td><td class="mono">30x11*</td><td class="mono">10x15</td><td class="mono">10x15</td><td></td><td>2-3s</td><td class="mono">15x15-20</td></tr>
+<tr><td>Calf Raise</td><td class="mono">135x15</td><td class="mono">135x12</td><td class="mono">135x12**</td><td class="mono">135x12**</td><td>2s</td><td class="mono">135x15</td></tr>
+</table><div style="padding:8px 12px;font-size:11px;color:var(--text3)">ECCENTRICS CLICKED on leg extensions. *should be 2s on LP. **rest-pause on calves.</div></div></div>
+
+<div class="card"><div class="card-head">Mar 31 — Lower <span class="pill pill-red">ABORTED</span></div><div class="card-body" style="font-size:13px;color:var(--text3);padding:12px 16px;">Too sore to train. Cantrip THC drink.</div></div>
+
+<div class="card"><div class="card-head">Session 3 — Upper AM/PM (Mar 30)</div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>Ecc</th><th>Next</th></tr>
+<tr><td>Incline DB (AM)</td><td class="mono">80x8</td><td class="mono">90x7</td><td class="mono">90x5</td><td class="mono">80x5</td><td>2s</td><td class="mono">85</td></tr>
+<tr><td>BB Row (AM)</td><td class="mono">135x8</td><td class="mono">155x8</td><td class="mono">155x8</td><td class="mono">155x6*</td><td>2s</td><td class="mono">155 w/ecc</td></tr>
+<tr><td>Pec Deck (AM)</td><td class="mono">205x12</td><td class="mono">205x8+2P</td><td class="mono" style="color:var(--red)">175x6*</td><td></td><td>3s</td><td class="mono">185</td></tr>
+<tr><td>Lat PD (PM)</td><td class="mono" style="color:var(--green)">115x12</td><td class="mono" style="color:var(--green)">115x12</td><td class="mono">115x10</td><td></td><td>2-3s</td><td class="mono">120</td></tr>
+<tr><td>DB Press 75&deg; (PM)</td><td class="mono">35x12</td><td class="mono">35x12</td><td class="mono">35x12</td><td></td><td>2-3s</td><td class="mono">40</td></tr>
+<tr><td>Cable Lat (PM)</td><td class="mono">10x11+P</td><td class="mono">5x15</td><td class="mono" style="color:var(--red)">5x11*</td><td></td><td>3s</td><td class="mono">7.5</td></tr>
+<tr><td>EZ/Tri SS (PM)</td><td class="mono">60x12/25x15</td><td class="mono">50x12*/30x12</td><td></td><td></td><td>2-3s</td><td class="mono">Same</td></tr>
+<tr><td>Calf Raise (PM)</td><td class="mono">115x15</td><td class="mono">115x15</td><td class="mono">115x14+P</td><td class="mono">115x15**</td><td>2s</td><td class="mono">135</td></tr>
+<tr><td>Hip Thrust (PM)</td><td class="mono">95x12</td><td class="mono">95x12</td><td class="mono">95x12</td><td></td><td>2s</td><td class="mono">115-135</td></tr>
+</table><div style="padding:8px 12px;font-size:11px;color:var(--text3)">PM session fueled by burrito — best PM performance. *failure, **rest-pause.</div></div></div>
+
+<div class="card"><div class="card-head">Session 2 — Pull (Mar 28) <span class="pill pill-yellow">522 cal pre</span></div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>Ecc</th><th>Next</th></tr>
+<tr><td>Lat Pulldown</td><td class="mono">115x10</td><td class="mono">115x9+P</td><td class="mono">115x10</td><td class="mono">115x8</td><td>2-3s</td><td class="mono">120</td></tr>
+<tr><td>CS DB Row</td><td class="mono">30x10</td><td class="mono">30x10</td><td class="mono">30x9.5</td><td class="mono" style="color:var(--red)">30x9*</td><td>2-3s</td><td class="mono">35</td></tr>
+<tr><td>SA Cable Row</td><td class="mono">60x5</td><td class="mono">36x12</td><td class="mono" style="color:var(--red)">36x12*</td><td></td><td>2-3s</td><td class="mono">40</td></tr>
+<tr><td>Rev Pec Deck</td><td class="mono">40x20</td><td class="mono">55x10</td><td class="mono">40x15+5P</td><td></td><td>2-3s</td><td class="mono">45</td></tr>
+<tr><td>Incline DB Curl</td><td class="mono">25x11</td><td class="mono">25x5</td><td class="mono">20x7</td><td></td><td>2-3s</td><td class="mono">25x10</td></tr>
+<tr><td>Hammer Curl</td><td class="mono">20x7</td><td class="mono">15x15*</td><td class="mono">15x15*</td><td></td><td>2-3s</td><td class="mono">15x12</td></tr>
+</table><div style="padding:8px 12px;font-size:11px;color:var(--text3)">Trained on 522 cal — felt flat. 60 too heavy on cable row. *failure/*cheating.</div></div></div>
+
+<div class="card"><div class="card-head">Session 1 — Legs/Ham (Mar 27)</div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>Ecc</th><th>Next</th></tr>
+<tr><td>Leg Extensions</td><td class="mono">210x20</td><td></td><td></td><td></td><td>NONE</td><td class="mono">w/3s ecc</td></tr>
+<tr><td>Stiff-Leg DL</td><td class="mono">135x10</td><td class="mono">185x10</td><td class="mono">225x5</td><td class="mono">185x10</td><td>2s</td><td class="mono">190</td></tr>
+<tr><td>Seated Leg Curl</td><td class="mono">90x11</td><td class="mono">90x9</td><td class="mono" style="color:var(--red)">80x8*</td><td class="mono" style="color:var(--red)">70x6*</td><td>3s</td><td class="mono">90x12</td></tr>
+<tr><td>Single-Leg RDL</td><td class="mono">25x10</td><td class="mono">20x8</td><td></td><td></td><td>2s</td><td class="mono">25x10x3</td></tr>
+</table><div style="padding:8px 12px;font-size:11px;color:var(--text3)">Did leg extensions first (wrong order). Set 3 SLDL too heavy. Only 2/3 sets RDL — gym closed. *failure.</div></div></div>
+
+</div>
 
 <div id="progression" class="tab"><div class="section-head">Progression</div><div class="card"><div class="card-head">Compounds</div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>Current</th><th>Next</th></tr><tr><td>Incline DB</td><td class="mono">80 lbs</td><td class="mono">85</td></tr><tr><td>Flat DB</td><td class="mono">80 lbs</td><td class="mono">85</td></tr><tr><td>BB Row</td><td class="mono">155 lbs</td><td class="mono">155 w/ecc</td></tr><tr><td>Hack Squat</td><td class="mono">240 lbs</td><td class="mono">260</td></tr><tr><td>Leg Press</td><td class="mono">370 lbs</td><td class="mono">400</td></tr><tr><td>SLDL</td><td class="mono">185 lbs</td><td class="mono">190</td></tr><tr><td>DB Press 75&deg;</td><td class="mono">40 lbs</td><td class="mono">40x12</td></tr></table></div></div><div class="card"><div class="card-head">Isolations + Techniques</div><div class="card-body flush" style="overflow-x:auto;"><table><tr><th>Exercise</th><th>Current</th><th>Technique</th></tr><tr><td>Pec Deck</td><td class="mono">175</td><td><span class="pill pill-accent">Drop set</span></td></tr><tr><td>Leg Ext</td><td class="mono">100-120</td><td><span class="pill pill-accent">Lengthened partial</span></td></tr><tr><td>Cable Lat Raise</td><td class="mono">5</td><td><span class="pill pill-accent">Myo-reps</span></td></tr><tr><td>Incline Curl</td><td class="mono">25</td><td><span class="pill pill-accent">Lengthened partial</span></td></tr><tr><td>Leg Curl</td><td class="mono">90</td><td><span class="pill pill-accent">Drop set</span></td></tr><tr><td>Tri Pushdown</td><td class="mono">TBD</td><td><span class="pill pill-accent">Drop set</span></td></tr></table></div></div></div>
 
@@ -903,7 +993,7 @@ tr:last-child td { border-bottom: none; }
   <button class="nav-item active" onclick="go('daily')"><div class="nav-icon">&#10003;</div>Daily</button>
   <button class="nav-item" onclick="go('logger')"><div class="nav-icon">&#128170;</div>Log</button>
   <button class="nav-item" onclick="go('coach')"><div class="nav-icon">&#128172;</div>Coach</button>
-  <button class="nav-item" onclick="go('dash')"><div class="nav-icon">&#128200;</div>Stats</button>
+  <button class="nav-item" onclick="go('progress')"><div class="nav-icon">&#128200;</div>Progress</button>
   <button class="nav-item" onclick="go('more')"><div class="nav-icon">&#8943;</div>More</button>
 </nav>
 
@@ -926,7 +1016,7 @@ function go(id) {
   document.querySelectorAll('.desktop-nav button').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll(`.nav-item, .desktop-nav button`).forEach(b=>{
     const txt = b.textContent.trim().toLowerCase();
-    const map = {daily:'daily',log:'logger',coach:'coach',stats:'dash',more:'more',dashboard:'dash',nutrition:'nutrition','training log':'training',progression:'progression',compliance:'compliance','body stats':'weight',refeeds:'refeed',reference:'reference','ai coach':'coach','log workout':'logger'};
+    const map = {daily:'daily',log:'logger',coach:'coach',progress:'progress',more:'more',dashboard:'dash',nutrition:'nutrition','training log':'training',progression:'progression',compliance:'compliance','body stats':'weight',refeeds:'refeed',reference:'reference','ai coach':'coach','log workout':'logger',stats:'dash'};
     if(map[txt]===id) b.classList.add('active');
   });
   if(id==='logger') loadTodaysLog();
@@ -1074,7 +1164,202 @@ function addMsg(t,cls){const m=document.getElementById('chatMessages'),d=documen
 
 // ═══════ INIT ═══════
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-document.addEventListener('DOMContentLoaded',()=>{renderDay();loadTodaysLog();initCoach();});
+
+// ═══════ CHARTS ═══════
+let chartsInit = false;
+function initCharts() {
+  if (chartsInit) return;
+  if (typeof Chart === 'undefined') return;
+  chartsInit = true;
+
+  const accent = '#FF5A2F';
+  const accentLight = '#FFB99A';
+  const green = '#10B981';
+  const red = '#EF4444';
+  const gray = '#E5E5EA';
+  const text3 = '#9CA3AF';
+
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = text3;
+
+  // ── Daily Calories ──
+  const calDays = ['3/26','3/27','3/28','3/29','3/30','3/31','4/1','4/2','4/3','4/4','4/5','4/6','4/7','4/8','4/9'];
+  const calVals = [2340,3322,2200,2266,2330,2327,2188,1756,1680,2180,2436,2231,2824,2441,2257];
+  const calColors = calVals.map(v => v > 2500 ? red : v < 2100 ? red : v >= 2200 && v <= 2500 ? green : accentLight);
+
+  new Chart(document.getElementById('chartCal'), {
+    type: 'bar',
+    data: {
+      labels: calDays,
+      datasets: [{
+        data: calVals,
+        backgroundColor: calColors,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        annotation: undefined
+      },
+      scales: {
+        y: {
+          min: 1400,
+          max: 3500,
+          grid: { color: '#F0F0F2' },
+          ticks: { callback: v => v.toLocaleString() }
+        },
+        x: { grid: { display: false } }
+      }
+    },
+    plugins: [{
+      id: 'targetLine',
+      afterDraw(chart) {
+        const ctx = chart.ctx;
+        const yScale = chart.scales.y;
+        const y = yScale.getPixelForValue(2350);
+        ctx.save();
+        ctx.strokeStyle = accent;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, y);
+        ctx.lineTo(chart.chartArea.right, y);
+        ctx.stroke();
+        ctx.fillStyle = accent;
+        ctx.font = '11px Inter';
+        ctx.fillText('2,350 target', chart.chartArea.right - 72, y - 6);
+        ctx.restore();
+      }
+    }]
+  });
+
+  // ── Daily Protein ──
+  const proVals = [248,217,257,234,241,232,239,126,123,217,235,209,205,213,216];
+  const proColors = proVals.map(v => v >= 228 ? green : v >= 200 ? accentLight : red);
+
+  new Chart(document.getElementById('chartPro'), {
+    type: 'bar',
+    data: {
+      labels: calDays,
+      datasets: [{
+        data: proVals,
+        backgroundColor: proColors,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 100, max: 280, grid: { color: '#F0F0F2' }, ticks: { callback: v => v + 'g' } },
+        x: { grid: { display: false } }
+      }
+    },
+    plugins: [{
+      id: 'proteinLine',
+      afterDraw(chart) {
+        const ctx = chart.ctx;
+        const y = chart.scales.y.getPixelForValue(228);
+        ctx.save();
+        ctx.strokeStyle = green;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, y);
+        ctx.lineTo(chart.chartArea.right, y);
+        ctx.stroke();
+        ctx.fillStyle = green;
+        ctx.font = '11px Inter';
+        ctx.fillText('228g target', chart.chartArea.right - 68, y - 6);
+        ctx.restore();
+      }
+    }]
+  });
+
+  // ── Key Lifts Wk1 vs Wk2 ──
+  const liftNames = ['Lat PD','CS DB Row','DB Press 75°','Pec Deck','Dip Machine','Hack Squat','Leg Press'];
+  const wk1 = [115, 30, 35, 205, 0, 240, 370];
+  const wk2 = [120, 35, 40, 175, 180, 0, 0];
+
+  new Chart(document.getElementById('chartLifts'), {
+    type: 'bar',
+    data: {
+      labels: liftNames,
+      datasets: [
+        { label: 'Week 1', data: wk1, backgroundColor: accentLight, borderRadius: 6, borderSkipped: false },
+        { label: 'Week 2', data: wk2, backgroundColor: accent, borderRadius: 6, borderSkipped: false }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { usePointStyle: true, pointStyle: 'circle', padding: 16 } }
+      },
+      scales: {
+        x: { grid: { color: '#F0F0F2' }, ticks: { callback: v => v + ' lbs' } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  // ── Weekly Sessions ──
+  new Chart(document.getElementById('chartSessions'), {
+    type: 'bar',
+    data: {
+      labels: ['Week 1', 'Week 2', 'Week 3'],
+      datasets: [{
+        label: 'Sessions',
+        data: [4, 2, 0],
+        backgroundColor: [accentLight, red, gray],
+        borderRadius: 8,
+        borderSkipped: false,
+        barThickness: 40,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 6, grid: { color: '#F0F0F2' }, ticks: { stepSize: 1 } },
+        x: { grid: { display: false } }
+      }
+    },
+    plugins: [{
+      id: 'sessionTarget',
+      afterDraw(chart) {
+        const ctx = chart.ctx;
+        const y = chart.scales.y.getPixelForValue(5);
+        ctx.save();
+        ctx.strokeStyle = green;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(chart.chartArea.left, y);
+        ctx.lineTo(chart.chartArea.right, y);
+        ctx.stroke();
+        ctx.fillStyle = green;
+        ctx.font = '11px Inter';
+        ctx.fillText('5 target', chart.chartArea.right - 52, y - 6);
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{renderDay();loadTodaysLog();initCoach();setTimeout(initCharts,500);});
+
+// Re-init charts when progress tab is shown (Chart.js needs visible canvas)
+const origGo = go;
+go = function(id) {
+  origGo(id);
+  if (id === 'progress') setTimeout(initCharts, 100);
+};
 </script>
 </body>
 </html>
